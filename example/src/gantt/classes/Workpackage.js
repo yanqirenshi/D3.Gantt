@@ -6,12 +6,15 @@ export default class Workpackage extends Element {
     }
     styling (scale) {
         const plan = this.core.plan;
-        const w = scale(plan.end) - scale(plan.start);
+        const x = scale(plan.start);
+        const w = scale(plan.end) - x;
 
         this.size({
             w: w,
             h: this.style.h,
         });
+
+        this.location({ x: x });
 
         return this;
     }

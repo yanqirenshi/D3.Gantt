@@ -59,7 +59,11 @@ export default class Stylist {
             pool.list.push(elem);
             pool.ht[elem.id] = elem;
 
-            index[elem.parentId()] = elem;
+            const parent_id = elem.parentId();
+            if (!index[parent_id])
+                index[parent_id] = [];
+
+            index[parent_id].push(elem);
         }
 
         return { pool: pool, index: index };
@@ -226,7 +230,7 @@ export default class Stylist {
         pools.workpackages = ret.pool;
         pools.indexWpKeyParent = ret.index;
 
-        pools.wbs = this.stylingWBS(style, data, pools);
+        pools.wbs = this.stylingWBS(style, data, pools.indexWpKeyParent);
 
         pools.head = this.stylingHead(style, pools);
         pools.body = this.stylingBody(style, pools);
