@@ -29,15 +29,15 @@ const DATA = {
     ],
     workpackages: [
         { id: 100, parent: 20, name: 'WP 100', plan: term('2020-01-01', 10) },
-        { id: 101, parent: 30, name: 'WP 101', plan: term('2020-01-01', 10) },
-        { id: 102, parent: 40, name: 'WP 102', plan: term('2020-01-01', 10) },
-        { id: 103, parent: 50, name: 'WP 103', plan: term('2020-01-01', 10) },
-        { id: 104, parent: 60, name: 'WP 104', plan: term('2020-01-01', 10) },
-        { id: 105, parent: 70, name: 'WP 105', plan: term('2020-01-01', 10) },
+        { id: 101, parent: 30, name: 'WP 101', plan: term('2020-01-05', 10) },
+        { id: 102, parent: 40, name: 'WP 102', plan: term('2020-01-10', 10) },
+        { id: 103, parent: 50, name: 'WP 103', plan: term('2020-01-15', 10) },
+        { id: 104, parent: 60, name: 'WP 104', plan: term('2020-01-20', 10) },
+        { id: 105, parent: 70, name: 'WP 105', plan: term('2020-01-25', 10) },
     ],
     style: {
         stage: {
-            w: 1111,
+            w: 1111 * 2,
             padding: 22,
         },
         head: {

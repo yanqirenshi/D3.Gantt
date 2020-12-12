@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 import * as Classes from './Classes.js';
 
 export default class Stylist {
@@ -45,14 +47,14 @@ export default class Stylist {
             indexWpKeyParent: workpackages.list.reduce(makeIndex, {}),
         };
     }
-    stylingWorkpackages (style, data) {
+    stylingWorkpackages (style, scale, data) {
         const pool = this.makePool();
 
         const index = {};
         for (const wp of data.workpackages) {
             const elem = new Classes.Workpackage(wp, style.body.chart);
 
-            elem.styling();
+            elem.styling(scale);
 
             pool.list.push(elem);
             pool.ht[elem.id] = elem;
@@ -194,6 +196,14 @@ export default class Stylist {
 
         return out;
     }
+    makeScale (stage, data) {
+        const term = this.getTerm(data);
+
+        return d3
+            .scaleTime()
+            .range([0, stage.contentsW()])
+            .domain([term.start, term.end]);
+    }
     styling (data, children) {
         const style = data.style;
 
@@ -210,9 +220,9 @@ export default class Stylist {
             indexWpKeyParent: null,
         };
 
-        // const term = this.getTerm(data);
+        const scale = this.makeScale(stage, data);
 
-        const ret = this.stylingWorkpackages(style, data);
+        const ret = this.stylingWorkpackages(style, scale, data);
         pools.workpackages = ret.pool;
         pools.indexWpKeyParent = ret.index;
 

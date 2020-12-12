@@ -1,15 +1,18 @@
 import Element from './Element.js';
 
-const CONTENTS_W = 1111;
-
 export default class Workpackage extends Element {
     parentId () {
         return this.core.parent || null;
     }
-    styling (style, children) {
+    styling (scale) {
+        const plan = this.core.plan;
+        const w = scale(plan.end) - scale(plan.start);
+
         this.size({
-            w: CONTENTS_W,
+            w: w,
             h: this.style.h,
         });
+
+        return this;
     }
 };

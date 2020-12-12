@@ -17,5 +17,7 @@ export default class Wbs extends Element {
         const h = rect.h + this.style.padding || 0;
 
         this.size({ w: 888, h: h });
+
+        return this;
     }
 };
