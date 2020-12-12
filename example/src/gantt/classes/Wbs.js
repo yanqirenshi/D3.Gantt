@@ -1,20 +1,33 @@
 import Element from './Element.js';
 
 export default class Wbs extends Element {
-    layoutChildren (children) {
+    padding () {
+        return this.style.padding || 0;
     }
-    rectChildren (children) {
-        // for (const child of children)
-        //     ; // ここは location と size で最大公約数な Rect を算出する。
+    layoutChildren (children) {
+        for (const child of children)
+            console.log(child);
+    }
+    childrenH (children) {
+        let h = 0;
 
-        return { w:200, h: 88 };
+        for (const child of children) {
+            const child_h = child.location().y + child.size().h;
+
+            if (h < child_h)
+                h = child_h;
+        }
+
+        return h;
     }
     styling (children) {
-        this.layoutChildren(children);
+        // this.layoutChildren(children);
 
-        const rect = this.rectChildren(children);
+        const rect = this.childrenH(children);
 
-        const h = rect.h + this.style.padding || 0;
+        const children_h = this.childrenH(children);
+
+        const h = children_h===0 ? this.style.h : this.childrenH(children) + (this.style.padding * 2 || 0);
 
         this.size({ w: 888, h: h });
 

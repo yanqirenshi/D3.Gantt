@@ -75,14 +75,14 @@ export default class Stylist {
         for (const wbs of data.wbs) {
             const children = index[wbs.id] || [];
 
-            const elem = new Classes.Wbs(wbs, style.body.row, children);
-
-            elem.styling();
+            const elem = new Classes.Wbs(wbs, style.body.row);
 
             if (before)
                 elem.location({
                     y: before.location().y + before.size().h,
                 });
+
+            elem.styling(children);
 
             before = elem;
 
@@ -177,6 +177,14 @@ export default class Stylist {
                 x: wbs.location().x + padding,
                 y: wbs.location().y + padding,
             });
+
+        for (const wp of pools.workpackages.list) {
+            const wbs = pools.wbs.ht[wp.parentId()];
+            wp.location({
+                y: wp.location().y + wbs.location().y + wbs.padding(),
+                x: wp.location().x + padding,
+            });
+        }
 
         const w = pools.stage.w();
 
