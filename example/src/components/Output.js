@@ -6,7 +6,7 @@ const style={
     root: {
         width: 1111,
         marginLeft: 'auto',
-        marginLeft: 'auto',
+        marginRight: 'auto',
     }
 };
 

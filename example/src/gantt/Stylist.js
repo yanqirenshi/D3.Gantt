@@ -1,83 +1,5 @@
 import * as Classes from './Classes.js';
 
-const PADDING = 22;
-const CONTENTS_W = 1111;
-const HEADER_H = 222;
-const FOOT_H = 88;
-
-class Element {
-    constructor (data) {
-        this._size = { w:0, h:0 };
-        this._location = { x:0, y:0 };
-        this._type = null;
-
-        this.init(data);
-    }
-    init (data) {
-        this.core = data;
-        data.obj = this;
-    }
-    type (v) {
-        if (arguments.length>0)
-            this._type = v;
-
-        return this._type;
-    }
-    children () {
-        return this.core.children;
-    }
-    size (v) {
-        if (arguments.length===0)
-            return this._size;
-
-        if (v.w && v.w!==this._size.w)
-            this._size.w = v.w;
-
-        if (v.h && v.h!==this._size.h)
-            this._size.h = v.h;
-
-        return this._size;
-    }
-    location (v) {
-        if (arguments.length===0)
-            return this._location;
-
-        if (v.x && v.x!==this._location.x)
-            this._location.x = v.x;
-
-        if (v.y && v.y!==this._location.y)
-            this._location.y = v.y;
-
-        return this._location;
-    }
-    layoutChildren (children) {
-    }
-    rectChildren (children) {
-        for (const child of children)
-            ; // ここは location と size で最大公約数な Rect を算出する。
-
-        return { w:200, h: 88 };
-    }
-    styling (style, children) {
-        const type = this.type();
-        if (type==="WP")
-            this.size({
-                w: CONTENTS_W,
-                h: style.h,
-            });
-
-        if (type==="WBS") {
-            this.layoutChildren(children);
-
-            const rect = this.rectChildren(children);
-
-            const h = rect.h + style.padding || 0;
-
-            this.size({ w: 888, h: h });
-        }
-    }
-}
-
 export default class Stylist {
     makePool (list) {
         if (!list)
@@ -123,134 +45,138 @@ export default class Stylist {
             indexWpKeyParent: workpackages.list.reduce(makeIndex, {}),
         };
     }
-    stylingWorkpackages (style, pools) {
-        const workpackages = pools.workpackages;
+    stylingWorkpackages (style, data) {
+        const pool = this.makePool();
 
-        for (const data of workpackages.list) {
-            const elem = new Element(data);
+        const index = {};
+        for (const wp of data.workpackages) {
+            const elem = new Classes.Workpackage(wp, style.body.chart);
 
-            elem.type('WP');
+            elem.styling();
 
-            elem.styling(style.body.chart);
+            pool.list.push(elem);
+            pool.ht[elem.id] = elem;
+
+            index[elem.parentId()] = elem;
         }
+
+        return { pool: pool, index: index };
     }
-    stylingWBS (style, pools) {
-        const index = pools.indexWpKeyParent;
+    stylingWBS (style, data, index) {
+        const pool = this.makePool();
 
         let before = null;
-        for (const data of pools.wbs.list) {
-            const children = index[data.id] || [];
+        for (const wbs of data.wbs) {
+            const children = index[wbs.id] || [];
 
-            const elem = new Element(data);
+            const elem = new Classes.Wbs(wbs, style.body.row, children);
 
-            elem.type('WBS');
-
-            elem.styling(style.body.row, children);
+            elem.styling();
 
             if (before)
                 elem.location({
                     y: before.location().y + before.size().h,
                 });
 
-
             before = elem;
+
+            pool.list.push(elem);
+            pool.ht[elem.id] = elem;
         }
+
+        return pool;
     }
     stylingHead (style, pools) {
-        const data = {
-            size: {
-                w: CONTENTS_W,
-                h: HEADER_H,
-            },
-            location: { x: 0, y: 0 },
-        };
+        const obj = new Classes.Head({}, style.head);
 
-        new Classes.Head(data);
+        obj.size({
+            w: pools.stage.contentsW(),
+            h: style.head.h,
+        });
 
-        pools.head = data;
+        obj.location({ x: 0, y: 0 });
+
+        return obj;
     }
     stylingBody (style, pools) {
-        const header_h = HEADER_H;
-
+        const header_h = pools.head.size().h;
         const location = { x: 0, y: header_h};
         const size = {
-            w: CONTENTS_W,
+            w: pools.stage.contentsW(),
             h: 0,
         };
 
         let h = 0;
         for (const wbs of pools.wbs.list) {
-            const l = wbs.obj.location();
-            const s = wbs.obj.size();
+            const l = wbs.location();
+            const s = wbs.size();
 
             if (h < l.y + s.h)
                 h = l.y + s.h;
 
-            wbs.obj.location({
+            wbs.location({
                 x: l.x + location.x,
                 y: l.y + location.y,
             });
 
-            wbs.obj.size({
+            wbs.size({
                 w: size.w,
             });
         };
 
         size.h = h;
 
-        const data= {
-            size: size,
-            location: location,
-        };
+        const obj = new Classes.Body({});
 
-        new Classes.Body(data);
+        obj.size(size);
+        obj.location(location);
 
-        pools.body = data;
+        return obj;
     }
     stylingFoot (style, pools) {
-        const data = {
-            size: {
-                w: CONTENTS_W,
-                h: FOOT_H
-            },
-            location: {
-                x: 0,
-                y: pools.head.size.h + pools.body.size.h
-            },
-        };
+        const obj = new Classes.Foot({});
 
-        new Classes.Foot(data);
+        obj.size({
+            w: pools.stage.contentsW(),
+            h: style.foot.h,
+        });
 
-        pools.foot = data;
+        obj.location({
+            x: 0,
+            y: pools.head.size().h + pools.body.size().h
+        });
+
+        return obj;
     }
-    stylingStage (style, pools) {
-        const h = PADDING
-              + pools.head.size.h
-              + pools.body.size.h
-              + pools.foot.size.h
-              + PADDING;
+    stylingStage (pools) {
+        const obj = pools.stage;
+        const padding = obj.padding();
 
-        pools.head.location.x = pools.head.location.x + PADDING;
-        pools.body.location.x = pools.body.location.x + PADDING;
-        pools.foot.location.x = pools.foot.location.x + PADDING;
+        const h = padding
+              + pools.head.size().h
+              + pools.body.size().h
+              + pools.foot.size().h
+              + padding;
 
-        pools.head.location.y = pools.head.location.y + PADDING;
-        pools.body.location.y = pools.body.location.y + PADDING;
-        pools.foot.location.y = pools.foot.location.y + PADDING;
+        pools.head.location().x = pools.head.location().x + padding;
+        pools.body.location().x = pools.body.location().x + padding;
+        pools.foot.location().x = pools.foot.location().x + padding;
+
+        pools.head.location().y = pools.head.location().y + padding;
+        pools.body.location().y = pools.body.location().y + padding;
+        pools.foot.location().y = pools.foot.location().y + padding;
 
         for (const wbs of pools.wbs.list)
-            wbs.obj.location({
-                x: wbs.obj.location().x + PADDING,
-                y: wbs.obj.location().y + PADDING,
+            wbs.location({
+                x: wbs.location().x + padding,
+                y: wbs.location().y + padding,
             });
 
-        pools.stage = {
-            size: {
-                w: CONTENTS_W + PADDING * 2,
-                h: h
-            },
-            location: { x: 0, y: 0 },
-        };
+        const w = pools.stage.w();
+
+        obj.size({ w: w, h: h });
+
+        obj.location({ x: 0, y: 0 });
     }
     getTerm (pools) {
         const out = {
@@ -258,8 +184,7 @@ export default class Stylist {
             end: null,
         };
 
-        for (const wp of pools.workpackages.list) {
-            console.log(wp);
+        for (const wp of pools.workpackages) {
             if (out.start===null || out.start > wp.plan.start)
                 out.start = wp.plan.start;
 
@@ -272,17 +197,32 @@ export default class Stylist {
     styling (data, children) {
         const style = data.style;
 
-        const pools = this.data2pools(data);
+        const stage = new Classes.Stage({}, style.stage);
 
-        const term = this.getTerm(pools);
+        const pools = {
+            stage: stage,
+            head: null,
+            body: null,
+            foot: null,
+            gropus: null,
+            wbs: null,
+            workpackages: null,
+            indexWpKeyParent: null,
+        };
 
-        this.stylingWorkpackages(style, pools);
-        this.stylingWBS(style, pools);
+        // const term = this.getTerm(data);
 
-        this.stylingBody(style, pools);
-        this.stylingHead(style, pools);
-        this.stylingFoot(style, pools);
-        this.stylingStage(style, pools);
+        const ret = this.stylingWorkpackages(style, data);
+        pools.workpackages = ret.pool;
+        pools.indexWpKeyParent = ret.index;
+
+        pools.wbs = this.stylingWBS(style, data, pools);
+
+        pools.head = this.stylingHead(style, pools);
+        pools.body = this.stylingBody(style, pools);
+        pools.foot = this.stylingFoot(style, pools);
+
+        this.stylingStage(pools);
 
         return pools;
     }

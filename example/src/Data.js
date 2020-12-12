@@ -40,7 +40,8 @@ const DATA = {
             w: 1111,
             padding: 22,
         },
-        header: {
+        head: {
+            h: 111,
             cell: {
                 size: { w:0, h:0 },
                 color: '#333',
@@ -57,6 +58,9 @@ const DATA = {
                 padding: 11,
                 background: '#f00',
             }
+        },
+        foot: {
+            h: 88,
         },
     }
 };
