@@ -24,6 +24,7 @@ yarn-error.log*
 
 # documents
 documents/node_modules
+documents/.eslintcache
 
 # example
 example/node_modules
