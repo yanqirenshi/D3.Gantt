@@ -12,7 +12,10 @@ const term = (start, length) => {
 
 const DATA = {
     scale: {
-        cycle: 'days', // month, week, hour, minute, second ここは moment に併せるか。
+        // y(years), Q(quarters), M(months), w(weeks), d(days)
+        // h(hours), m(minutes), s(seconds), ms(milliseconds)
+        cycle: 'd',
+        w: 88,
         start: null,
         end: null,
     },

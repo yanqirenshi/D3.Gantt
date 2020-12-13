@@ -31,6 +31,18 @@ export default class D3Gantt extends Asshole{
             .attr("height", d => d.size().h)
             .attr("fill", "#0aaaaa");
     }
+    drawCell (place, data) {
+        place.selectAll("rect.timescale")
+            .data(data.timescale)
+            .enter()
+            .append("rect")
+            .attr("class", 'timescale')
+            .attr("x", d => d.location().x)
+            .attr("y", d => d.location().y)
+            .attr("width", d => d.size().w)
+            .attr("height", d => d.size().h)
+            .attr("fill", "#eee");
+    }
     drawBody (place, data) {
         place.selectAll("rect.body")
             .data([data.body])
@@ -67,10 +79,7 @@ export default class D3Gantt extends Asshole{
             .attr("height", d => d.size().h)
             .attr("fill", "#fff");
     }
-    drawCell (place, data) {
-    }
     drawChart (place, data) {
-        console.log(data.workpackages.list);
         place.selectAll("rect.chart")
             .data(data.workpackages.list)
             .enter()
@@ -88,11 +97,11 @@ export default class D3Gantt extends Asshole{
         const place = this.getLayerForeground();
         this.drawStage(place, data);
         this.drawHead(place, data);
+        this.drawCell(place, data);
         this.drawBody(place, data);
         this.drawFoot(place, data);
         this.drawRows(place, data);
         this.drawChart(place, data);
-        // this.drawCell(place, data);
     }
     data (data) {
         const model = this.stylist.styling(data);

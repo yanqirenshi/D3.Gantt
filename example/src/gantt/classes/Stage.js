@@ -5,10 +5,10 @@ export default class Stage extends Element {
         return this.style.padding || 0;
     }
     w () {
-        return this.style.w || 0;
+        return this.size().w;
     }
     contentsW () {
-        const w = this.style.w || 0;
+        const w = this.size().w;
 
         const padding = this.padding();
 

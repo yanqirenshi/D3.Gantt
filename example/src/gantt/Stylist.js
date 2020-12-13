@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as d3 from 'd3';
 
 import * as Classes from './Classes.js';
@@ -208,21 +209,63 @@ export default class Stylist {
 
         return out;
     }
-    makeScale (stage, data) {
-        const term = this.getTerm(data);
-
+    makeScale (stage, term) {
         return d3
             .scaleTime()
             .range([0, stage.contentsW()])
             .domain([term.start, term.end]);
     }
+    makeStage (data, term, style) {
+        const stage = new Classes.Stage({}, style.stage);
+
+        const cycle = data.scale.cycle;
+        const len = moment(term.end).diff(moment(term.start), cycle);
+        const w = data.scale.w * len;
+
+        stage.size({
+            w: w + style.stage.padding * 2,
+        });
+
+        return stage;
+    }
+    makeHeaderCells (style, pools) {
+        const scale = pools.scale;
+        const term = pools.term;
+
+        const cells = [];
+
+        const start = moment(term.start);
+        const end = moment(term.end);
+
+        let cell_start = moment(start);
+        while (cell_start.isBefore(end)) {
+            const cell_end = moment(cell_start).add('d', 1);
+
+            let x_start = scale(cell_start.toDate());
+            let x_end = scale(cell_end.toDate());
+
+            const obj = new Classes.Cell({
+                start: moment(cell_start),
+                end: moment(cell_end),
+            });
+            obj.location({
+                x:x_start + pools.stage.padding(),
+                y: 0 + pools.stage.padding(),
+            });
+            obj.size({ w: x_end - x_start, h: style.head.h });
+
+            cells.push(obj);
+
+            cell_start.add('d', 1);
+        }
+
+        return cells;
+    }
     styling (data, children) {
         const style = data.style;
 
-        const stage = new Classes.Stage({}, style.stage);
-
         const pools = {
-            stage: stage,
+            stage: null,
             head: null,
             body: null,
             foot: null,
@@ -230,11 +273,22 @@ export default class Stylist {
             wbs: null,
             workpackages: null,
             indexWpKeyParent: null,
+            term: null,
+            timescale: null,
+            scale: null,
         };
 
-        const scale = this.makeScale(stage, data);
+        pools.term = this.getTerm(data);
 
-        const ret = this.stylingWorkpackages(style, scale, data);
+        const term = pools.term;
+
+        pools.stage = this.makeStage(data, term, style);
+
+        pools.scale = this.makeScale(pools.stage, pools.term);
+
+        pools.timescale = this.makeHeaderCells(style, pools);
+
+        const ret = this.stylingWorkpackages(style, pools.scale, data);
         pools.workpackages = ret.pool;
         pools.indexWpKeyParent = ret.index;
 
