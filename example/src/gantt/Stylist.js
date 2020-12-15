@@ -133,7 +133,7 @@ export default class Stylist {
 
         size.h = h;
 
-        const obj = new Classes.Body({});
+        const obj = new Classes.Body({}, style.body);
 
         obj.size(size);
         obj.location(location);
@@ -141,7 +141,7 @@ export default class Stylist {
         return obj;
     }
     stylingFoot (style, pools) {
-        const obj = new Classes.Foot({});
+        const obj = new Classes.Foot({}, style.foot);
 
         obj.size({
             w: pools.stage.contentsW(),
@@ -247,11 +247,13 @@ export default class Stylist {
             const obj = new Classes.Cell({
                 start: moment(cell_start),
                 end: moment(cell_end),
-            });
+            }, style.head.cell);
+
             obj.location({
                 x:x_start + pools.stage.padding(),
                 y: 0 + pools.stage.padding(),
             });
+
             obj.size({ w: x_end - x_start, h: style.head.h });
 
             cells.push(obj);

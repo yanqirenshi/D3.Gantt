@@ -40,30 +40,33 @@ const DATA = {
     ],
     style: {
         stage: {
-            w: 1111 * 2,
             padding: 22,
+            background: '#f8f8f8',
         },
         head: {
             h: 111,
             cell: {
                 size: { w:0, h:0 },
                 color: '#333',
-                background: '#fff',
-            }
+                background: '#fafafa',
+            },
+            background: '#fff',
         },
         body: {
             row: {
-                padding: 8,
+                padding: 22,
                 background: '#fff',
             },
             chart: {
                 h: 88,
                 padding: 11,
-                background: '#f00',
-            }
+                background: '#ea5506',
+            },
+            background: '#fff',
         },
         foot: {
             h: 33,
+            background: '#fff',
         },
     }
 };

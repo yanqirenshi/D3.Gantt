@@ -17,7 +17,7 @@ export default class D3Gantt extends Asshole{
             .attr("y", d => d.location().y)
             .attr("width", d => d.size().w)
             .attr("height", d => d.size().h)
-            .attr("fill", "#aaaaaa");
+            .attr("fill", d => d.style.background);
     }
     drawHead (place, data) {
         place.selectAll("rect.head")
@@ -29,7 +29,7 @@ export default class D3Gantt extends Asshole{
             .attr("y", d => d.location().y)
             .attr("width", d => d.size().w)
             .attr("height", d => d.size().h)
-            .attr("fill", "#0aaaaa");
+            .attr("fill", d => d.style.background);
     }
     drawCell (place, data) {
         place.selectAll("rect.timescale")
@@ -41,7 +41,7 @@ export default class D3Gantt extends Asshole{
             .attr("y", d => d.location().y)
             .attr("width", d => d.size().w)
             .attr("height", d => d.size().h)
-            .attr("fill", "#eee");
+            .attr("fill", d => d.style.background);
     }
     drawBody (place, data) {
         place.selectAll("rect.body")
@@ -53,7 +53,7 @@ export default class D3Gantt extends Asshole{
             .attr("y", d => d.location().y)
             .attr("width", d => d.size().w)
             .attr("height", d => d.size().h)
-            .attr("fill", "#aa0aaa");
+            .attr("fill", d => d.style.background);
     }
     drawFoot (place, data) {
         place.selectAll("rect.foot")
@@ -65,7 +65,7 @@ export default class D3Gantt extends Asshole{
             .attr("y", d => d.location().y)
             .attr("width", d => d.size().w)
             .attr("height", d => d.size().h)
-            .attr("fill", "#aaaa0a");
+            .attr("fill", d => d.style.background);
     }
     drawRows (place, data) {
         place.selectAll("rect.row")
@@ -77,7 +77,7 @@ export default class D3Gantt extends Asshole{
             .attr("y", d => d.location().y)
             .attr("width", d => d.size().w)
             .attr("height", d => d.size().h)
-            .attr("fill", "#fff");
+            .attr("fill", d => d.style.background);
     }
     drawChart (place, data) {
         place.selectAll("rect.chart")
@@ -91,7 +91,7 @@ export default class D3Gantt extends Asshole{
             .attr("height", d => d.size().h)
             .attr("rx", d => d.size().h/2)
             .attr("ry", d => d.size().h/2)
-            .attr("fill", "#ea5506");
+            .attr("fill", d => d.style.background);
     }
     draw (data) {
         const place = this.getLayerForeground();
