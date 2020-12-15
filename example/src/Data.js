@@ -1,8 +1,8 @@
 import moment from 'moment';
 
-const term = (start, length) => {
+const term = (start, end) => {
     const start_m = moment(start);
-    const end_m = moment(start).add('d', length);
+    const end_m = moment(end);
 
     return {
         start: start_m.toDate(),
@@ -14,8 +14,8 @@ const DATA = {
     scale: {
         // y(years), Q(quarters), M(months), w(weeks), d(days)
         // h(hours), m(minutes), s(seconds), ms(milliseconds)
-        cycle: 'd',
-        w: 88,
+        cycle: 'M',
+        w: 222,
         start: null,
         end: null,
     },
@@ -29,14 +29,35 @@ const DATA = {
         { id: 60, name: 'WBS 60' },
         { id: 70, name: 'WBS 70' },
         { id: 80, name: 'WBS 80' },
+        { id: 90, name: 'WBS 90' },
+        { id: 99, name: 'WBS 90' },
     ],
     workpackages: [
-        { id: 100, parent: 20, name: 'WP 100', plan: term('2020-01-01', 10) },
-        { id: 101, parent: 30, name: 'WP 101', plan: term('2020-01-05', 10) },
-        { id: 102, parent: 40, name: 'WP 102', plan: term('2020-01-10', 10) },
-        { id: 103, parent: 50, name: 'WP 103', plan: term('2020-01-15', 10) },
-        { id: 104, parent: 60, name: 'WP 104', plan: term('2020-01-20', 10) },
-        { id: 105, parent: 70, name: 'WP 105', plan: term('2020-01-25', 10) },
+        { id: 1000, parent: 10, name: 'Task 1000', plan: term('2020-09-01', '2021-09-30') },
+        { id: 1001, parent: 10, name: 'Task 1001', plan: term('2020-10-01', '2020-10-31') },
+        { id: 2000, parent: 20, name: 'Task 2000', plan: term('2020-11-01', '2020-11-30') },
+        { id: 3000, parent: 30, name: 'Task 3000', plan: term('2020-11-15', '2021-01-31') },
+        { id: 4000, parent: 40, name: 'Task 4000', plan: term('2021-01-01', '2021-04-15') },
+        { id: 4001, parent: 40, name: 'Task 4001', plan: term('2021-01-01', '2021-04-15') },
+        { id: 5000, parent: 50, name: 'Task 5000', plan: term('2021-04-01', '2021-05-31') },
+        { id: 5001, parent: 50, name: 'Task 5001', plan: term('2021-04-01', '2021-05-31') },
+        { id: 6000, parent: 60, name: 'Task 6000', plan: term('2021-06-01', '2021-07-31') },
+        { id: 6001, parent: 60, name: 'Task 6001', plan: term('2021-06-01', '2021-07-31') },
+        { id: 7000, parent: 70, name: 'Task 7000', plan: term('2021-06-01', '2021-07-31') },
+        { id: 8000, parent: 80, name: 'Task 8000', plan: term('2021-06-01', '2021-07-31') },
+        { id: 8001, parent: 80, name: 'Task 8001', plan: term('2021-06-01', '2021-07-31') },
+        { id: 8800, parent: 80, name: 'Task 8800', plan: term('2021-08-01', '2021-08-31') },
+        { id: 8801, parent: 80, name: 'Task 8801', plan: term('2021-08-01', '2021-08-31') },
+        { id: 9000, parent: 90, name: 'Task 9000', plan: term('2020-09-01', '2020-09-30') },
+        { id: 9001, parent: 90, name: 'Task 9001', plan: term('2020-10-01', '2020-12-31') },
+        { id: 9002, parent: 90, name: 'Task 9002', plan: term('2021-01-01', '2021-01-31') },
+        { id: 9003, parent: 90, name: 'Task 9003', plan: term('2021-02-01', '2021-04-30') },
+        { id: 9004, parent: 90, name: 'Task 9004', plan: term('2021-02-01', '2021-07-12') },
+        { id: 9005, parent: 90, name: 'Task 9005', plan: term('2021-07-13', '2021-11-12') },
+        { id: 9006, parent: 90, name: 'Task 9006', plan: term('2021-02-01', '2021-05-31') },
+        { id: 9007, parent: 90, name: 'Task 9007', plan: term('2021-09-06', '2021-11-12') },
+        { id: 9008, parent: 90, name: 'Task 9008', plan: term('2021-10-18', '2021-11-23') },
+        { id: 9900, parent: 99, name: 'Task 9900', plan: term('2020-09-01', '2021-07-31') },
     ],
     style: {
         stage: {
@@ -51,18 +72,21 @@ const DATA = {
                 background: '#fafafa',
             },
             background: '#fff',
+            // #546a7b border
+            // #747a81 font
         },
         body: {
             row: {
-                padding: 22,
+                padding: 33,
                 background: '#fff',
             },
             chart: {
-                h: 88,
+                h: 111,
                 padding: 11,
                 background: '#ea5506',
             },
             background: '#fff',
+            // #516f79 line
         },
         foot: {
             h: 33,
