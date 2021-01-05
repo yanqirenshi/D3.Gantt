@@ -34,4 +34,12 @@ export default class Element {
 
         return this._location;
     }
+    children (v) {
+        if (arguments.length===0)
+            return this._children || [];
+
+        this._children = v;
+
+        return this._children;
+    }
 };

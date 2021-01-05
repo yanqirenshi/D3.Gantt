@@ -266,7 +266,7 @@ export default class Stylist {
     styling (data, children) {
         const style = data.style;
 
-        const pools = {
+        const models = {
             stage: null,
             head: null,
             body: null,
@@ -280,28 +280,28 @@ export default class Stylist {
             scale: null,
         };
 
-        pools.term = this.getTerm(data);
+        models.term = this.getTerm(data);
 
-        const term = pools.term;
+        const term = models.term;
 
-        pools.stage = this.makeStage(data, term, style);
+        models.stage = this.makeStage(data, term, style);
 
-        pools.scale = this.makeScale(pools.stage, pools.term);
+        models.scale = this.makeScale(models.stage, models.term);
 
-        pools.timescale = this.makeHeaderCells(style, pools);
+        models.timescale = this.makeHeaderCells(style, models);
 
-        const ret = this.stylingWorkpackages(style, pools.scale, data);
-        pools.workpackages = ret.pool;
-        pools.indexWpKeyParent = ret.index;
+        const ret = this.stylingWorkpackages(style, models.scale, data);
+        models.workpackages = ret.pool;
+        models.indexWpKeyParent = ret.index;
 
-        pools.wbs = this.stylingWBS(style, data, pools.indexWpKeyParent);
+        models.wbs = this.stylingWBS(style, data, models.indexWpKeyParent);
 
-        pools.head = this.stylingHead(style, pools);
-        pools.body = this.stylingBody(style, pools);
-        pools.foot = this.stylingFoot(style, pools);
+        models.head = this.stylingHead(style, models);
+        models.body = this.stylingBody(style, models);
+        models.foot = this.stylingFoot(style, models);
 
-        this.stylingStage(pools);
+        this.stylingStage(models);
 
-        return pools;
+        return models;
     }
 }

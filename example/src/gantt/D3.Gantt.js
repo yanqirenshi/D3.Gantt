@@ -31,6 +31,7 @@ export default class D3Gantt extends Asshole{
             .attr("height", d => d.size().h)
             .attr("fill", d => d.style.background);
     }
+    drawHeadGrit (place, data) {}
     drawCell (place, data) {
         place.selectAll("rect.timescale")
             .data(data.timescale)
@@ -55,6 +56,7 @@ export default class D3Gantt extends Asshole{
             .attr("height", d => d.size().h)
             .attr("fill", d => d.style.background);
     }
+    drawBodyGrit (place, data) {}
     drawFoot (place, data) {
         place.selectAll("rect.foot")
             .data([data.foot])
@@ -96,11 +98,17 @@ export default class D3Gantt extends Asshole{
     draw (data) {
         const place = this.getLayerForeground();
         this.drawStage(place, data);
+
         this.drawHead(place, data);
-        this.drawCell(place, data);
         this.drawBody(place, data);
         this.drawFoot(place, data);
+
+        this.drawCell(place, data);
         this.drawRows(place, data);
+
+        this.drawBodyGrit(place, data);
+        this.drawHeadGrit(place, data);
+
         this.drawChart(place, data);
     }
     data (data) {
