@@ -7,11 +7,13 @@ import Output from './components/Output.js';
 import DATA from './DATA.js';
 
 function App() {
-    return <>
-             <Hero />
-             <Output source={DATA} />
-             <Input source={DATA} />
-           </>;
+    return (
+        <>
+          <Hero />
+          <Output source={DATA} />
+          <Input source={DATA} />
+        </>
+    );
 }
 
 export default App;
