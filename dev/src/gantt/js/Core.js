@@ -2,9 +2,10 @@ import Asshole from '@yanqirenshi/assh0le';
 
 import Stylist from './Stylist.js';
 
-export default class D3Gantt extends Asshole{
-    constructor () {
-        super();
+export default class Core extends Asshole{
+    constructor (params) {
+        super(params);
+
         this.stylist = new Stylist();
     }
     drawStage (place, data) {

@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+documents/node_modules
+example/node_modules
+dev/node_modules
 /.pnp
 .pnp.js
 
@@ -28,8 +31,6 @@ yarn-error.log*
 
 # documents
 documents/.eslintcache
-documents/node_modules
 
 # example
 example/.eslintcache
-example/node_modules
