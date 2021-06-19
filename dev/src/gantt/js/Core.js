@@ -2,7 +2,7 @@ import Asshole from '@yanqirenshi/assh0le';
 
 import Stylist from './Stylist.js';
 
-export default class Core extends Asshole{
+export default class Core extends Asshole {
     constructor (params) {
         super(params);
 
