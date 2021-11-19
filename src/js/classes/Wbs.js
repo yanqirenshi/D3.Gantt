@@ -5,20 +5,24 @@ export default class Wbs extends Element {
         return this.style.padding || 0;
     }
     layoutChildrenAddTemp (wp, tmp) {
-        const isPuton = (targets) => {
-            for (const target of targets) {
-                const wp_l = wp.location();
-                const wp_s = wp.size();
-                const trg_l = target.location();
-                const trg_s = target.size();
 
-                if (Math.abs(wp_l.x - trg_l.x) < wp_s.w/2 + trg_s.w/2 &&
-                    Math.abs(wp_l.y - trg_l.y) < wp_s.h/2 + trg_s.h/2)
-                    return true;
-            }
+        // 矩形が被るものがないか確認する。 被る=true, 被らない=false
+        // const isPuton = (targets) => {
+        //     for (const target of targets) {
+        //         const wp_l = wp.location();
+        //         const wp_s = wp.size();
+        //         const trg_l = target.location();
+        //         const trg_s = target.size();
 
-            return false;
-        };
+        //         if (Math.abs(wp_l.x - trg_l.x) < wp_s.w / 2 + trg_s.w / 2 &&
+        //             Math.abs(wp_l.y - trg_l.y) < wp_s.h / 2 + trg_s.h / 2)
+        //             return true;
+        //     }
+
+        //     return false;
+        // };
+        // TODO: 仮設
+        const isPuton = (targets) => true;
 
         for (const wp_list of tmp) {
             if (isPuton(wp_list))
@@ -85,7 +89,7 @@ export default class Wbs extends Element {
     styling (children) {
         this.layoutChildren(children);
 
-        const rect = this.childrenH(children);
+        this.childrenH(children);
 
         const children_h = this.childrenH(children);
 

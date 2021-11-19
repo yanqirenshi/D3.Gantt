@@ -56,42 +56,38 @@ var Wbs = /*#__PURE__*/function (_Element) {
   }, {
     key: "layoutChildrenAddTemp",
     value: function layoutChildrenAddTemp(wp, tmp) {
+      // 矩形が被るものがないか確認する。 被る=true, 被らない=false
+      // const isPuton = (targets) => {
+      //     for (const target of targets) {
+      //         const wp_l = wp.location();
+      //         const wp_s = wp.size();
+      //         const trg_l = target.location();
+      //         const trg_s = target.size();
+      //         if (Math.abs(wp_l.x - trg_l.x) < wp_s.w / 2 + trg_s.w / 2 &&
+      //             Math.abs(wp_l.y - trg_l.y) < wp_s.h / 2 + trg_s.h / 2)
+      //             return true;
+      //     }
+      //     return false;
+      // };
+      // TODO: 仮設
       var isPuton = function isPuton(targets) {
-        var _iterator = _createForOfIteratorHelper(targets),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var target = _step.value;
-            var wp_l = wp.location();
-            var wp_s = wp.size();
-            var trg_l = target.location();
-            var trg_s = target.size();
-            if (Math.abs(wp_l.x - trg_l.x) < wp_s.w / 2 + trg_s.w / 2 && Math.abs(wp_l.y - trg_l.y) < wp_s.h / 2 + trg_s.h / 2) return true;
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-
-        return false;
+        return true;
       };
 
-      var _iterator2 = _createForOfIteratorHelper(tmp),
-          _step2;
+      var _iterator = _createForOfIteratorHelper(tmp),
+          _step;
 
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var wp_list = _step2.value;
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var wp_list = _step.value;
           if (isPuton(wp_list)) continue;
           wp_list.push(wp);
           return;
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator.e(err);
       } finally {
-        _iterator2.f();
+        _iterator.f();
       }
 
       tmp.push([wp]);
@@ -127,12 +123,12 @@ var Wbs = /*#__PURE__*/function (_Element) {
 
       var before = null;
 
-      var _iterator3 = _createForOfIteratorHelper(this.layoutChildrenMakeTmp(children)),
-          _step3;
+      var _iterator2 = _createForOfIteratorHelper(this.layoutChildrenMakeTmp(children)),
+          _step2;
 
       try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var wp_list = _step3.value;
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var wp_list = _step2.value;
 
           if (!before) {
             before = wp_list.reduce(cal, {
@@ -142,20 +138,20 @@ var Wbs = /*#__PURE__*/function (_Element) {
             continue;
           }
 
-          var _iterator4 = _createForOfIteratorHelper(wp_list),
-              _step4;
+          var _iterator3 = _createForOfIteratorHelper(wp_list),
+              _step3;
 
           try {
-            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-              var wp = _step4.value;
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+              var wp = _step3.value;
               wp.location({
                 y: before.y + before.h + 11
               });
             }
           } catch (err) {
-            _iterator4.e(err);
+            _iterator3.e(err);
           } finally {
-            _iterator4.f();
+            _iterator3.f();
           }
 
           before = wp_list.reduce(cal, {
@@ -164,9 +160,9 @@ var Wbs = /*#__PURE__*/function (_Element) {
           });
         }
       } catch (err) {
-        _iterator3.e(err);
+        _iterator2.e(err);
       } finally {
-        _iterator3.f();
+        _iterator2.f();
       }
     }
   }, {
@@ -174,19 +170,19 @@ var Wbs = /*#__PURE__*/function (_Element) {
     value: function childrenH(children) {
       var h = 0;
 
-      var _iterator5 = _createForOfIteratorHelper(children),
-          _step5;
+      var _iterator4 = _createForOfIteratorHelper(children),
+          _step4;
 
       try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var child = _step5.value;
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var child = _step4.value;
           var child_h = child.location().y + child.size().h;
           if (h < child_h) h = child_h;
         }
       } catch (err) {
-        _iterator5.e(err);
+        _iterator4.e(err);
       } finally {
-        _iterator5.f();
+        _iterator4.f();
       }
 
       return h;
@@ -195,7 +191,7 @@ var Wbs = /*#__PURE__*/function (_Element) {
     key: "styling",
     value: function styling(children) {
       this.layoutChildren(children);
-      var rect = this.childrenH(children);
+      this.childrenH(children);
       var children_h = this.childrenH(children);
       var h = children_h === 0 ? this.style.h : this.childrenH(children) + (this.style.padding * 2 || 0);
       this.size({

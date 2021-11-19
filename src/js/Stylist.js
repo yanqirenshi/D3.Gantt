@@ -294,6 +294,21 @@ export default class Stylist {
 
         return cells;
     }
+    makeNow (style, pools) {
+        const scale = pools.scale;
+
+        const x = scale(new Date());
+        const y = style.stage.padding;
+
+        const h = pools.head._size.h + pools.body._size.h + pools.foot._size.h;
+
+        return {
+            x1: x,
+            y1: y,
+            x2: x,
+            y2: y + h,
+        };
+    }
     styling (data, children) {
         const style = data.style;
 
@@ -310,6 +325,7 @@ export default class Stylist {
             timescale: null,
             grid: null,
             scale: null,
+            now: null,
         };
 
         models.term = this.getTerm(data);
@@ -333,6 +349,8 @@ export default class Stylist {
         models.foot = this.stylingFoot(style, models);
 
         models.grid = this.makeGrid(style, models);
+
+        models.now = this.makeNow (style, models);
 
         this.stylingStage(models);
 

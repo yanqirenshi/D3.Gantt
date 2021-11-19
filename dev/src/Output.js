@@ -5,7 +5,7 @@ import D3Gantt, {Rectum} from './lib/index.js';
 const rectum = new Rectum();
 
 export default function Output (props) {
-    const [data, setData] = useState(props.source);
+    const [data] = useState(props.source);
 
     useEffect(()=> rectum.data(rectum.styling(data)), [data]);
 

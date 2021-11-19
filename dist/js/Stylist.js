@@ -386,6 +386,20 @@ var Stylist = /*#__PURE__*/function () {
       return cells;
     }
   }, {
+    key: "makeNow",
+    value: function makeNow(style, pools) {
+      var scale = pools.scale;
+      var x = scale(new Date());
+      var y = style.stage.padding;
+      var h = pools.head._size.h + pools.body._size.h + pools.foot._size.h;
+      return {
+        x1: x,
+        y1: y,
+        x2: x,
+        y2: y + h
+      };
+    }
+  }, {
     key: "styling",
     value: function styling(data, children) {
       var style = data.style;
@@ -401,7 +415,8 @@ var Stylist = /*#__PURE__*/function () {
         term: null,
         timescale: null,
         grid: null,
-        scale: null
+        scale: null,
+        now: null
       };
       models.term = this.getTerm(data);
       var term = models.term;
@@ -416,6 +431,7 @@ var Stylist = /*#__PURE__*/function () {
       models.body = this.stylingBody(style, models);
       models.foot = this.stylingFoot(style, models);
       models.grid = this.makeGrid(style, models);
+      models.now = this.makeNow(style, models);
       this.stylingStage(models);
       return models;
     }

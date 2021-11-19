@@ -14,6 +14,7 @@ const DATA = {
     scale: {
         // y(years), Q(quarters), M(months), w(weeks), d(days)
         // h(hours), m(minutes), s(seconds), ms(milliseconds)
+        // cycle: 'M',
         cycle: 'M',
         w: 222,
         start: null,
@@ -33,7 +34,7 @@ const DATA = {
         { id: 99, name: 'WBS 90' },
     ],
     workpackages: [
-        { id: 1000, parent: 10, name: 'Task 1000', plan: term('2020-09-01', '2021-09-30') },
+        { id: 1000, parent: 10, name: 'Task 1000', plan: term('2020-09-01', '2021-09-30'), style: { background: '#c1e4e9' } },
         { id: 1001, parent: 10, name: 'Task 1001', plan: term('2020-10-01', '2020-10-31') },
         { id: 2000, parent: 20, name: 'Task 2000', plan: term('2020-11-01', '2020-11-30') },
         { id: 3000, parent: 30, name: 'Task 3000', plan: term('2020-11-15', '2021-01-31') },
@@ -83,7 +84,7 @@ const DATA = {
             chart: {
                 h: 111,
                 padding: 11,
-                background: '#ea5506',
+                background: '#e0ebaf',
             },
             background: '#fff',
             // #516f79 line

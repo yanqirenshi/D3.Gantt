@@ -125,6 +125,19 @@ export default class Rectum extends Colon {
             .attr("font-size", d => fontSize(d))
             .text(d => d.core.name);
     }
+    drawNow (place, data) {
+        place.selectAll("line.now")
+            .data([data.now])
+            .enter()
+            .append("line")
+            .attr("class", 'grid')
+            .attr("x1", d => d.x1)
+            .attr("y1", d => d.y1)
+            .attr("x2", d => d.x2)
+            .attr("y2", d => d.y2)
+            .attr("stroke", "#d9333f")
+            .attr("stroke-width", 5);
+    }
     draw () {
         const data = this.data();
 
@@ -141,6 +154,8 @@ export default class Rectum extends Colon {
 
         this.drawBodyGrid(place, data);
         this.drawHeadGrit(place, data);
+
+        this.drawNow(place, data);
 
         this.drawChart(place, data);
     }

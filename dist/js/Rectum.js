@@ -188,6 +188,19 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       });
     }
   }, {
+    key: "drawNow",
+    value: function drawNow(place, data) {
+      place.selectAll("line.now").data([data.now]).enter().append("line").attr("class", 'grid').attr("x1", function (d) {
+        return d.x1;
+      }).attr("y1", function (d) {
+        return d.y1;
+      }).attr("x2", function (d) {
+        return d.x2;
+      }).attr("y2", function (d) {
+        return d.y2;
+      }).attr("stroke", "#d9333f").attr("stroke-width", 5);
+    }
+  }, {
     key: "draw",
     value: function draw() {
       var data = this.data();
@@ -200,6 +213,7 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       this.drawRows(place, data);
       this.drawBodyGrid(place, data);
       this.drawHeadGrit(place, data);
+      this.drawNow(place, data);
       this.drawChart(place, data);
     }
   }, {
