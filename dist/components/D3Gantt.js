@@ -5,33 +5,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = D3Deployment;
-Object.defineProperty(exports, "Camera", {
-  enumerable: true,
-  get: function get() {
-    return _assh0le.Camera;
-  }
-});
+exports["default"] = D3Gantt;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _reactMeasure = _interopRequireDefault(require("react-measure"));
+var _assh0le = _interopRequireDefault(require("@yanqirenshi/assh0le"));
 
-var _assh0le = require("@yanqirenshi/assh0le");
-
-var _Core = _interopRequireDefault(require("../js/Core.js"));
+var _Rectum = _interopRequireDefault(require("../js/Rectum.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -45,38 +31,35 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var svgid = "D3Deployment-".concat(Math.floor(Math.random() * Math.floor(88888888)));
+var rectum = new _Rectum["default"]();
+var style = {
+  root: {
+    width: 1111,
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  }
+};
 
-function D3Deployment(props) {
-  var _useState = (0, _react.useState)(new _Core["default"]({
-    selector: '#' + svgid,
-    camera: props.camera
-  })),
-      _useState2 = _slicedToArray(_useState, 1),
-      core = _useState2[0];
+function D3Gantt(props) {
+  var _useState = (0, _react.useState)(props.source),
+      _useState2 = _slicedToArray(_useState, 2),
+      data = _useState2[0],
+      setData = _useState2[1];
 
   (0, _react.useEffect)(function () {
-    return core.focus();
-  }, [core]);
-  (0, _react.useEffect)(function () {
-    return core.data(props.source);
-  });
-  return /*#__PURE__*/_react["default"].createElement(_reactMeasure["default"], {
-    bounds: true,
-    onResize: function onResize(cr) {
-      return core.bounds(_objectSpread({}, cr.bounds));
+    return rectum.data(rectum.styling(data));
+  }, [data]);
+  return /*#__PURE__*/_react["default"].createElement("div", {
+    style: {
+      padding: 22
     }
-  }, function (_ref) {
-    var measureRef = _ref.measureRef;
-    return /*#__PURE__*/_react["default"].createElement("div", {
-      ref: measureRef,
-      className: "grid-inner",
-      style: {
-        width: '100%',
-        height: '100%'
-      }
-    }, /*#__PURE__*/_react["default"].createElement("svg", {
-      id: svgid
-    }));
-  });
+  }, /*#__PURE__*/_react["default"].createElement("div", {
+    style: {
+      height: 555,
+      border: '1px solid #eee'
+    }
+  }, /*#__PURE__*/_react["default"].createElement(_assh0le["default"], {
+    id: "asshole-graph",
+    rectum: rectum
+  })));
 }

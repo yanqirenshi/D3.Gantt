@@ -1,14 +1,15 @@
-import Asshole from '@yanqirenshi/assh0le';
+import {Colon} from '@yanqirenshi/assh0le';
 
 import Stylist from './Stylist.js';
 
-export default class Core extends Asshole {
+export default class Rectum extends Colon {
     constructor (params) {
         super(params);
 
         this.stylist = new Stylist();
     }
     drawStage (place, data) {
+
         place.selectAll("rect.stage")
             .data([data.stage])
             .enter()
@@ -124,8 +125,11 @@ export default class Core extends Asshole {
             .attr("font-size", d => fontSize(d))
             .text(d => d.core.name);
     }
-    draw (data) {
-        const place = this.getLayerForeground();
+    draw () {
+        const data = this.data();
+
+        const place = this.layer('foreground');
+
         this.drawStage(place, data);
 
         this.drawHead(place, data);
@@ -140,11 +144,7 @@ export default class Core extends Asshole {
 
         this.drawChart(place, data);
     }
-    data (data) {
-        const model = this.stylist.styling(data);
-
-        this.draw(model);
-
-        return this;
+    styling (data) {
+        return this.stylist.styling(data);
     }
 }

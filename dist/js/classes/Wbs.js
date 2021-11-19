@@ -54,35 +54,39 @@ var Wbs = /*#__PURE__*/function (_Element) {
       return this.style.padding || 0;
     }
   }, {
-    key: "layoutChildren",
-    value: function layoutChildren(children) {
-      var _iterator = _createForOfIteratorHelper(children),
-          _step;
+    key: "layoutChildrenAddTemp",
+    value: function layoutChildrenAddTemp(wp, tmp) {
+      var isPuton = function isPuton(targets) {
+        var _iterator = _createForOfIteratorHelper(targets),
+            _step;
 
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var child = _step.value;
-          console.log(child);
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var target = _step.value;
+            var wp_l = wp.location();
+            var wp_s = wp.size();
+            var trg_l = target.location();
+            var trg_s = target.size();
+            if (Math.abs(wp_l.x - trg_l.x) < wp_s.w / 2 + trg_s.w / 2 && Math.abs(wp_l.y - trg_l.y) < wp_s.h / 2 + trg_s.h / 2) return true;
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
         }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-    }
-  }, {
-    key: "childrenH",
-    value: function childrenH(children) {
-      var h = 0;
 
-      var _iterator2 = _createForOfIteratorHelper(children),
+        return false;
+      };
+
+      var _iterator2 = _createForOfIteratorHelper(tmp),
           _step2;
 
       try {
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var child = _step2.value;
-          var child_h = child.location().y + child.size().h;
-          if (h < child_h) h = child_h;
+          var wp_list = _step2.value;
+          if (isPuton(wp_list)) continue;
+          wp_list.push(wp);
+          return;
         }
       } catch (err) {
         _iterator2.e(err);
@@ -90,12 +94,107 @@ var Wbs = /*#__PURE__*/function (_Element) {
         _iterator2.f();
       }
 
+      tmp.push([wp]);
+    }
+  }, {
+    key: "layoutChildrenMakeTmp",
+    value: function layoutChildrenMakeTmp(children) {
+      var _this = this;
+
+      var func = function func(tmp, child) {
+        if (tmp.length === 0) {
+          tmp.push([child]);
+          return tmp;
+        }
+
+        _this.layoutChildrenAddTemp(child, tmp);
+
+        return tmp;
+      };
+
+      return children.reduce(func, []);
+    }
+  }, {
+    key: "layoutChildren",
+    value: function layoutChildren(children) {
+      var cal = function cal(ht, wp) {
+        var y = wp.location().y;
+        var h = wp.size().h;
+        if (y > ht.y) ht.y = y;
+        if (h > ht.h) ht.h = h;
+        return ht;
+      };
+
+      var before = null;
+
+      var _iterator3 = _createForOfIteratorHelper(this.layoutChildrenMakeTmp(children)),
+          _step3;
+
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var wp_list = _step3.value;
+
+          if (!before) {
+            before = wp_list.reduce(cal, {
+              y: -1,
+              h: -1
+            });
+            continue;
+          }
+
+          var _iterator4 = _createForOfIteratorHelper(wp_list),
+              _step4;
+
+          try {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+              var wp = _step4.value;
+              wp.location({
+                y: before.y + before.h + 11
+              });
+            }
+          } catch (err) {
+            _iterator4.e(err);
+          } finally {
+            _iterator4.f();
+          }
+
+          before = wp_list.reduce(cal, {
+            y: -1,
+            h: -1
+          });
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
+    }
+  }, {
+    key: "childrenH",
+    value: function childrenH(children) {
+      var h = 0;
+
+      var _iterator5 = _createForOfIteratorHelper(children),
+          _step5;
+
+      try {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var child = _step5.value;
+          var child_h = child.location().y + child.size().h;
+          if (h < child_h) h = child_h;
+        }
+      } catch (err) {
+        _iterator5.e(err);
+      } finally {
+        _iterator5.f();
+      }
+
       return h;
     }
   }, {
     key: "styling",
     value: function styling(children) {
-      // this.layoutChildren(children);
+      this.layoutChildren(children);
       var rect = this.childrenH(children);
       var children_h = this.childrenH(children);
       var h = children_h === 0 ? this.style.h : this.childrenH(children) + (this.style.padding * 2 || 0);

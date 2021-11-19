@@ -73,22 +73,21 @@ export default class Stylist {
         const pool = this.makePool();
 
         let before = null;
-        for (const wbs of data.wbs) {
-            const children = index[wbs.id] || [];
-
-            const elem = new Classes.Wbs(wbs, style.body.row);
+        for (const wbs_data of data.wbs) {
+            const children = index[wbs_data.id] || [];
+            const wbs = new Classes.Wbs(wbs_data, style.body.row);
 
             if (before)
-                elem.location({
+                wbs.location({
                     y: before.location().y + before.size().h,
                 });
 
-            elem.styling(children);
+            wbs.styling(children);
 
-            before = elem;
+            before = wbs;
 
-            pool.list.push(elem);
-            pool.ht[elem.id] = elem;
+            pool.list.push(wbs);
+            pool.ht[wbs.id] = wbs;
         }
 
         return pool;

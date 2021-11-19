@@ -133,16 +133,16 @@ var Stylist = /*#__PURE__*/function () {
 
       try {
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var wbs = _step2.value;
-          var children = index[wbs.id] || [];
-          var elem = new Classes.Wbs(wbs, style.body.row);
-          if (before) elem.location({
+          var wbs_data = _step2.value;
+          var children = index[wbs_data.id] || [];
+          var wbs = new Classes.Wbs(wbs_data, style.body.row);
+          if (before) wbs.location({
             y: before.location().y + before.size().h
           });
-          elem.styling(children);
-          before = elem;
-          pool.list.push(elem);
-          pool.ht[elem.id] = elem;
+          wbs.styling(children);
+          before = wbs;
+          pool.list.push(wbs);
+          pool.ht[wbs.id] = wbs;
         }
       } catch (err) {
         _iterator2.e(err);
