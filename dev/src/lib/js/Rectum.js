@@ -98,32 +98,45 @@ export default class Rectum extends Colon {
             .attr("fill", d => d.style.background);
     }
     drawChart (place, data) {
-        const charts = place.selectAll("g.chart")
-              .data(data.workpackages.list)
-              .enter()
-              .append("g");
-
         const fontSize = (d) => {
             return Math.floor((d.size().h - (d.style.padding * 2)) * 0.7);
         };
 
-        charts.append("rect")
-            .attr("class", 'chart')
-            .attr("x", d => d.location().x)
-            .attr("y", d => d.location().y)
-            .attr("width", d => d.size().w)
-            .attr("height", d => d.size().h)
-            .attr("rx", d => d.size().h/2)
-            .attr("ry", d => d.size().h/2)
-            .attr("fill", d => d.style.background);
+        const drawCharts = (rects)=> {
+            rects
+                .attr("class", 'chart')
+                .attr("x", d => d.location().x)
+                .attr("y", d => d.location().y)
+                .attr("width", d => d.size().w)
+                .attr("height", d => d.size().h)
+                .attr("rx", d => d.size().h/2)
+                .attr("ry", d => d.size().h/2)
+                .attr("fill", d => d.style.background);
+        };
 
-        charts.append("text")
-            .attr("class", 'chart')
+        const drawTexts = (texts)=> {
+            texts
+                .attr("class", 'chart')
             .attr("x", d => d.location().x + (d.style.padding * 3))
             .attr("y", d => d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
             .attr("font-family", "Verdana")
             .attr("font-size", d => fontSize(d))
             .text(d => d.core.name);
+        };
+
+        const charts = place
+              .selectAll("g.chart")
+              .data(data.workpackages.list, (wp)=> wp.id)
+              .enter()
+              .append("g");
+
+        const rects = charts.append("rect");
+
+        drawCharts(rects);
+
+        const texts = charts.append("text");
+
+        drawTexts(texts);
     }
     drawNow (place, data) {
         place.selectAll("line.now")

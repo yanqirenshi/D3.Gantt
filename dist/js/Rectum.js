@@ -156,36 +156,47 @@ var Rectum = /*#__PURE__*/function (_Colon) {
   }, {
     key: "drawChart",
     value: function drawChart(place, data) {
-      var charts = place.selectAll("g.chart").data(data.workpackages.list).enter().append("g");
-
       var fontSize = function fontSize(d) {
         return Math.floor((d.size().h - d.style.padding * 2) * 0.7);
       };
 
-      charts.append("rect").attr("class", 'chart').attr("x", function (d) {
-        return d.location().x;
-      }).attr("y", function (d) {
-        return d.location().y;
-      }).attr("width", function (d) {
-        return d.size().w;
-      }).attr("height", function (d) {
-        return d.size().h;
-      }).attr("rx", function (d) {
-        return d.size().h / 2;
-      }).attr("ry", function (d) {
-        return d.size().h / 2;
-      }).attr("fill", function (d) {
-        return d.style.background;
-      });
-      charts.append("text").attr("class", 'chart').attr("x", function (d) {
-        return d.location().x + d.style.padding * 3;
-      }).attr("y", function (d) {
-        return d.location().y + d.style.padding + d.size().h / 2 + d.style.padding;
-      }).attr("font-family", "Verdana").attr("font-size", function (d) {
-        return fontSize(d);
-      }).text(function (d) {
-        return d.core.name;
-      });
+      var drawCharts = function drawCharts(rects) {
+        rects.attr("class", 'chart').attr("x", function (d) {
+          return d.location().x;
+        }).attr("y", function (d) {
+          return d.location().y;
+        }).attr("width", function (d) {
+          return d.size().w;
+        }).attr("height", function (d) {
+          return d.size().h;
+        }).attr("rx", function (d) {
+          return d.size().h / 2;
+        }).attr("ry", function (d) {
+          return d.size().h / 2;
+        }).attr("fill", function (d) {
+          return d.style.background;
+        });
+      };
+
+      var drawTexts = function drawTexts(texts) {
+        texts.attr("class", 'chart').attr("x", function (d) {
+          return d.location().x + d.style.padding * 3;
+        }).attr("y", function (d) {
+          return d.location().y + d.style.padding + d.size().h / 2 + d.style.padding;
+        }).attr("font-family", "Verdana").attr("font-size", function (d) {
+          return fontSize(d);
+        }).text(function (d) {
+          return d.core.name;
+        });
+      };
+
+      var charts = place.selectAll("g.chart").data(data.workpackages.list, function (wp) {
+        return wp.id;
+      }).enter().append("g");
+      var rects = charts.append("rect");
+      drawCharts(rects);
+      var texts = charts.append("text");
+      drawTexts(texts);
     }
   }, {
     key: "drawNow",
