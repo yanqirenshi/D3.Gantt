@@ -15,7 +15,7 @@ const DATA = {
         // y(years), Q(quarters), M(months), w(weeks), d(days)
         // h(hours), m(minutes), s(seconds), ms(milliseconds)
         // cycle: 'M',
-        cycle: 'M',
+        cycle: 'w',
         w: 222,
         start: null,
         end: null,

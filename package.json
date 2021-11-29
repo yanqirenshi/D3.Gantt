@@ -1,6 +1,6 @@
 {
     "name": "@yanqirenshi/d3.gantt",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "See `src/index.html`",
     "main": "dist/index.js",
     "directories": {

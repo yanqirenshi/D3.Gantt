@@ -1,4 +1,5 @@
 import Element from './Element.js';
+import moment from 'moment';
 
 export default class Workpackage extends Element {
     parentId () {
@@ -13,7 +14,6 @@ export default class Workpackage extends Element {
 
             this.style = new_style;
         }
-
         const plan = this.core.plan;
         const x = scale(plan.start);
         const w = scale(plan.end) - x;

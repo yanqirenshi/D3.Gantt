@@ -262,7 +262,7 @@ export default class Stylist {
 
         return cells;
     }
-    makeGrid (style, pools) {
+    makeGrid (cycle, style, pools) {
         const scale = pools.scale;
         const term = pools.term;
 
@@ -273,6 +273,7 @@ export default class Stylist {
 
         const h = pools.head._size.h + pools.body._size.h + pools.foot._size.h;
 
+        // 月次の線を追加
         let cell_start = moment(start);
         while (cell_start.isBefore(end)) {
 
@@ -284,12 +285,49 @@ export default class Stylist {
                     y: style.stage.padding,
                 },
                 size: { w: 0, h: h },
+                stroke: {
+                    color: '#333333',
+                    width: '3',
+                    dasharray: null,
+                },
             };
 
             if (obj.location.x>0)
                 cells.push(obj);
 
             cell_start.add('M', 1);
+        }
+
+        // 週次の線を追加
+        if (cycle==='w') {
+            // 週の始め(月曜日)を算出
+            const week_start = moment(term.start);
+
+            if (week_start.day()>0)
+                week_start.startOf('week');
+
+            week_start.add(1, 'd');
+            while (week_start.isBefore(end)) {
+                let x_start = scale(week_start.toDate());
+
+                const obj = {
+                    location: {
+                        x: x_start,
+                        y: style.stage.padding,
+                    },
+                    size: { w: 0, h: h },
+                    stroke: {
+                        color: '#666666',
+                        width: '1',
+                        dasharray: 3,
+                    },
+                };
+
+                if (obj.location.x>0)
+                    cells.push(obj);
+
+                week_start.add(1, 'w');
+            }
         }
 
         return cells;
@@ -348,7 +386,7 @@ export default class Stylist {
         models.body = this.stylingBody(style, models);
         models.foot = this.stylingFoot(style, models);
 
-        models.grid = this.makeGrid(style, models);
+        models.grid = this.makeGrid(data.scale.cycle, style, models);
 
         models.now = this.makeNow (style, models);
 
