@@ -358,13 +358,14 @@ var Stylist = /*#__PURE__*/function () {
     }
   }, {
     key: "makeGrid",
-    value: function makeGrid(style, pools) {
+    value: function makeGrid(cycle, style, pools) {
       var scale = pools.scale;
       var term = pools.term;
       var cells = [];
       var start = (0, _moment["default"])(term.start);
       var end = (0, _moment["default"])(term.end);
-      var h = pools.head._size.h + pools.body._size.h + pools.foot._size.h;
+      var h = pools.head._size.h + pools.body._size.h + pools.foot._size.h; // 月次の線を追加
+
       var cell_start = (0, _moment["default"])(start);
 
       while (cell_start.isBefore(end)) {
@@ -377,10 +378,45 @@ var Stylist = /*#__PURE__*/function () {
           size: {
             w: 0,
             h: h
+          },
+          stroke: {
+            color: '#333333',
+            width: '3',
+            dasharray: null
           }
         };
         if (obj.location.x > 0) cells.push(obj);
         cell_start.add('M', 1);
+      } // 週次の線を追加
+
+
+      if (cycle === 'w') {
+        // 週の始め(月曜日)を算出
+        var week_start = (0, _moment["default"])(term.start);
+        if (week_start.day() > 0) week_start.startOf('week');
+        week_start.add(1, 'd');
+
+        while (week_start.isBefore(end)) {
+          var _x_start = scale(week_start.toDate());
+
+          var _obj = {
+            location: {
+              x: _x_start,
+              y: style.stage.padding
+            },
+            size: {
+              w: 0,
+              h: h
+            },
+            stroke: {
+              color: '#666666',
+              width: '1',
+              dasharray: 3
+            }
+          };
+          if (_obj.location.x > 0) cells.push(_obj);
+          week_start.add(1, 'w');
+        }
       }
 
       return cells;
@@ -430,7 +466,7 @@ var Stylist = /*#__PURE__*/function () {
       models.head = this.stylingHead(style, models);
       models.body = this.stylingBody(style, models);
       models.foot = this.stylingFoot(style, models);
-      models.grid = this.makeGrid(style, models);
+      models.grid = this.makeGrid(data.scale.cycle, style, models);
       models.now = this.makeNow(style, models);
       this.stylingStage(models);
       return models;

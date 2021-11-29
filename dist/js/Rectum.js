@@ -51,32 +51,46 @@ var Rectum = /*#__PURE__*/function (_Colon) {
   _createClass(Rectum, [{
     key: "drawStage",
     value: function drawStage(place, data) {
-      place.selectAll("rect.stage").data([data.stage]).enter().append("rect").attr("class", 'stage').attr("x", function (d) {
-        return d.location().x;
-      }).attr("y", function (d) {
-        return d.location().y;
-      }).attr("width", function (d) {
-        return d.size().w;
-      }).attr("height", function (d) {
-        return d.size().h;
-      }).attr("fill", function (d) {
-        return d.style.background;
-      });
+      var draw = function draw(selections) {
+        selections.attr("class", 'stage').attr("x", function (d) {
+          return d.location().x;
+        }).attr("y", function (d) {
+          return d.location().y;
+        }).attr("width", function (d) {
+          return d.size().w;
+        }).attr("height", function (d) {
+          return d.size().h;
+        }).attr("fill", function (d) {
+          return d.style.background;
+        });
+      };
+
+      var selections = place.selectAll("rect.stage").data([data.stage]);
+      draw(selections);
+      draw(selections.enter().append("rect"));
+      selections.exit().remove();
     }
   }, {
     key: "drawHead",
     value: function drawHead(place, data) {
-      place.selectAll("rect.head").data([data.head]).enter().append("rect").attr("class", 'head').attr("x", function (d) {
-        return d.location().x;
-      }).attr("y", function (d) {
-        return d.location().y;
-      }).attr("width", function (d) {
-        return d.size().w;
-      }).attr("height", function (d) {
-        return d.size().h;
-      }).attr("fill", function (d) {
-        return d.style.background;
-      });
+      var draw = function draw(selection) {
+        selection.attr("class", 'head').attr("x", function (d) {
+          return d.location().x;
+        }).attr("y", function (d) {
+          return d.location().y;
+        }).attr("width", function (d) {
+          return d.size().w;
+        }).attr("height", function (d) {
+          return d.size().h;
+        }).attr("fill", function (d) {
+          return d.style.background;
+        });
+      };
+
+      var selections = place.selectAll("rect.head").data([data.head]);
+      draw(selections.enter().append("rect"));
+      draw(selections);
+      selections.exit().remove();
     }
   }, {
     key: "drawHeadGrit",
@@ -84,8 +98,22 @@ var Rectum = /*#__PURE__*/function (_Colon) {
   }, {
     key: "drawCell",
     value: function drawCell(place, data) {
-      var cells = place.selectAll("g.cell").data(data.timescale).enter().append("g").attr("class", 'cell');
-      cells.append("text").attr("class", 'chart').attr("x", function (d) {
+      var cells = place.selectAll("g.cell").data(data.timescale);
+      cells.exit().remove();
+      var enterd = cells.enter().append("g").attr("class", 'cell');
+      enterd.append("text").attr("class", 'chart').attr("x", function (d) {
+        return d.location().x + 22;
+      }).attr("y", function (d) {
+        return d.location().y + 77;
+      }).attr("font-family", "Verdana").attr("font-size", function (d) {
+        return 55;
+      }).text(function (d) {
+        return d.core.start.format('MM月');
+      });
+      cells.exit().remove();
+      cells.selectAll("text.chart").data(data.timescale, function (d) {
+        return d.core.start.format('YYYY-MM-DD');
+      }).attr("x", function (d) {
         return d.location().x + 22;
       }).attr("y", function (d) {
         return d.location().y + 77;
@@ -98,7 +126,20 @@ var Rectum = /*#__PURE__*/function (_Colon) {
   }, {
     key: "drawBody",
     value: function drawBody(place, data) {
-      place.selectAll("rect.body").data([data.body]).enter().append("rect").attr("class", 'body').attr("x", function (d) {
+      var selection = place.selectAll("rect.body").datum([data.body]);
+      var enterd = selection.enter().append("rect");
+      enterd.attr("class", 'body').attr("x", function (d) {
+        return d.location().x;
+      }).attr("y", function (d) {
+        return d.location().y;
+      }).attr("width", function (d) {
+        return d.size().w;
+      }).attr("height", function (d) {
+        return d.size().h;
+      }).attr("fill", function (d) {
+        return d.style.background;
+      });
+      selection.data([data.body]).attr("x", function (d) {
         return d.location().x;
       }).attr("y", function (d) {
         return d.location().y;
@@ -113,15 +154,31 @@ var Rectum = /*#__PURE__*/function (_Colon) {
   }, {
     key: "drawBodyGrid",
     value: function drawBodyGrid(place, data) {
-      place.selectAll("line.grid").data(data.grid).enter().append("line").attr("class", 'grid').attr("x1", function (d) {
-        return d.location.x;
-      }).attr("y1", function (d) {
-        return d.location.y;
-      }).attr("x2", function (d) {
-        return d.location.x;
-      }).attr("y2", function (d) {
-        return d.location.y + d.size.h;
-      }).attr("stroke", "black");
+      var draw = function draw(grids) {
+        grids.attr("class", 'grid').attr("x1", function (d) {
+          return d.location.x;
+        }).attr("y1", function (d) {
+          return d.location.y;
+        }).attr("x2", function (d) {
+          return d.location.x;
+        }).attr("y2", function (d) {
+          return d.location.y + d.size.h;
+        }).attr("stroke", function (d) {
+          return d.stroke.color;
+        }).attr("stroke-width", function (d) {
+          return d.stroke.width;
+        }).attr("stroke-dasharray", function (d) {
+          return d.stroke.dasharray;
+        });
+      };
+
+      var grids = place.selectAll("line.grid").data(data.grid); // add
+
+      draw(grids.enter().append("line")); // update
+
+      draw(grids); // delete
+
+      grids.exit().remove();
     }
   }, {
     key: "drawFoot",
@@ -141,7 +198,22 @@ var Rectum = /*#__PURE__*/function (_Colon) {
   }, {
     key: "drawRows",
     value: function drawRows(place, data) {
-      place.selectAll("rect.row").data(data.wbs.list).enter().append("rect").attr("class", 'row').attr("x", function (d) {
+      var selection = place.selectAll("rect.row").data(data.wbs.list, function (wbs) {
+        return wbs.id;
+      });
+      var enterd = selection.enter().append("rect").attr("class", 'row');
+      enterd.attr("x", function (d) {
+        return d.location().x;
+      }).attr("y", function (d) {
+        return d.location().y;
+      }).attr("width", function (d) {
+        return d.size().w;
+      }).attr("height", function (d) {
+        return d.size().h;
+      }).attr("fill", function (d) {
+        return d.style.background;
+      });
+      selection.attr("x", function (d) {
         return d.location().x;
       }).attr("y", function (d) {
         return d.location().y;
@@ -190,18 +262,38 @@ var Rectum = /*#__PURE__*/function (_Colon) {
         });
       };
 
-      var charts = place.selectAll("g.chart").data(data.workpackages.list, function (wp) {
+      var selection = place.selectAll("g.chart").data(data.workpackages.list, function (wp) {
         return wp.id;
-      }).enter().append("g");
-      var rects = charts.append("rect");
-      drawCharts(rects);
-      var texts = charts.append("text");
-      drawTexts(texts);
+      }); // add
+
+      var enterd = selection.enter().append("g").attr("class", 'chart');
+      drawCharts(enterd.append("rect"));
+      drawTexts(enterd.append("text")); // update
+
+      drawCharts(selection.selectAll("rect").data(data.workpackages.list, function (wp) {
+        return wp.id;
+      }));
+      drawTexts(selection.selectAll("text").data(data.workpackages.list, function (wp) {
+        return wp.id;
+      })); // delete
+
+      selection.exit().remove();
     }
   }, {
     key: "drawNow",
     value: function drawNow(place, data) {
-      place.selectAll("line.now").data([data.now]).enter().append("line").attr("class", 'grid').attr("x1", function (d) {
+      var selection = place.selectAll("line.now").data([data.now]);
+      var enterd = selection.enter().append("line").attr("class", 'grid');
+      enterd.attr("x1", function (d) {
+        return d.x1;
+      }).attr("y1", function (d) {
+        return d.y1;
+      }).attr("x2", function (d) {
+        return d.x2;
+      }).attr("y2", function (d) {
+        return d.y2;
+      }).attr("stroke", "#d9333f").attr("stroke-width", 5);
+      selection.attr("x1", function (d) {
         return d.x1;
       }).attr("y1", function (d) {
         return d.y1;
