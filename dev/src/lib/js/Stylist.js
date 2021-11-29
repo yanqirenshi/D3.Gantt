@@ -286,8 +286,8 @@ export default class Stylist {
                 },
                 size: { w: 0, h: h },
                 stroke: {
-                    color: '#333333',
-                    width: '3',
+                    color: '#666666',
+                    width: '1',
                     dasharray: null,
                 },
             };
@@ -317,7 +317,7 @@ export default class Stylist {
                     },
                     size: { w: 0, h: h },
                     stroke: {
-                        color: '#666666',
+                        color: '#999999',
                         width: '1',
                         dasharray: 3,
                     },

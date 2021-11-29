@@ -54,7 +54,7 @@ export default class Rectum extends Colon {
     drawCell (place, data) {
         const cells = place
               .selectAll("g.cell")
-              .data(data.timescale);
+              .data(data.timescale, (d)=>d.core.start.format('YYYY-MM-DD'));
 
         cells.exit().remove();
 

@@ -98,7 +98,9 @@ var Rectum = /*#__PURE__*/function (_Colon) {
   }, {
     key: "drawCell",
     value: function drawCell(place, data) {
-      var cells = place.selectAll("g.cell").data(data.timescale);
+      var cells = place.selectAll("g.cell").data(data.timescale, function (d) {
+        return d.core.start.format('YYYY-MM-DD');
+      });
       cells.exit().remove();
       var enterd = cells.enter().append("g").attr("class", 'cell');
       enterd.append("text").attr("class", 'chart').attr("x", function (d) {

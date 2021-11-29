@@ -380,8 +380,8 @@ var Stylist = /*#__PURE__*/function () {
             h: h
           },
           stroke: {
-            color: '#333333',
-            width: '3',
+            color: '#666666',
+            width: '1',
             dasharray: null
           }
         };
@@ -409,7 +409,7 @@ var Stylist = /*#__PURE__*/function () {
               h: h
             },
             stroke: {
-              color: '#666666',
+              color: '#999999',
               width: '1',
               dasharray: 3
             }
