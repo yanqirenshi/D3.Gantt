@@ -231,22 +231,23 @@ var Rectum = /*#__PURE__*/function (_Colon) {
     key: "drawChart",
     value: function drawChart(place, data) {
       var fontSize = function fontSize(d) {
-        return Math.floor((d.size().h - d.style.padding * 2) * 0.7);
+        var h = d._label.size.h;
+        return Math.floor((h - d.style.padding * 2) * 0.7);
       };
 
       var drawCharts = function drawCharts(rects) {
         rects.attr("class", 'chart').attr("x", function (d) {
-          return d.location().x;
+          return d._plan.location.x;
         }).attr("y", function (d) {
-          return d.location().y;
+          return d._plan.location.y;
         }).attr("width", function (d) {
-          return d.size().w;
+          return d._plan.size.w;
         }).attr("height", function (d) {
-          return d.size().h;
+          return d._plan.size.h;
         }).attr("rx", function (d) {
-          return d.size().h / 2;
+          return d._plan.size.h / 2;
         }).attr("ry", function (d) {
-          return d.size().h / 2;
+          return d._plan.size.h / 2;
         }).attr("fill", function (d) {
           return d.style.background;
         });
@@ -254,10 +255,12 @@ var Rectum = /*#__PURE__*/function (_Colon) {
 
       var drawTexts = function drawTexts(texts) {
         texts.attr("class", 'chart').attr("x", function (d) {
-          return d.location().x + d.style.padding * 3;
+          return d._label.location.x;
         }).attr("y", function (d) {
-          return d.location().y + d.style.padding + d.size().h / 2 + d.style.padding;
-        }).attr("font-family", "Verdana").attr("font-size", function (d) {
+          return d._label.location.y;
+        }) // .attr("x", d=> d.location().x + (d.style.padding * 3))
+        // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
+        .attr("font-family", "Verdana").attr("font-size", function (d) {
           return fontSize(d);
         }).text(function (d) {
           return d.core.name;

@@ -121,9 +121,10 @@ var Wbs = /*#__PURE__*/function (_Element) {
         return ht;
       };
 
+      var tmp = this.layoutChildrenMakeTmp(children);
       var before = null;
 
-      var _iterator2 = _createForOfIteratorHelper(this.layoutChildrenMakeTmp(children)),
+      var _iterator2 = _createForOfIteratorHelper(tmp),
           _step2;
 
       try {

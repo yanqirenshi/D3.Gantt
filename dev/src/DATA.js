@@ -10,18 +10,8 @@ const term = (start, end) => {
     };
 };
 
-const DATA = {
-    scale: {
-        // y(years), Q(quarters), M(months), w(weeks), d(days)
-        // h(hours), m(minutes), s(seconds), ms(milliseconds)
-        // cycle: 'M',
-        cycle: 'w',
-        w: 222,
-        start: null,
-        end: null,
-    },
-    groups: [],
-    wbs: [
+function wbs () {
+    return [
         { id: 10, name: 'WBS 10' },
         { id: 20, name: 'WBS 20' },
         { id: 30, name: 'WBS 30' },
@@ -32,8 +22,11 @@ const DATA = {
         { id: 80, name: 'WBS 80' },
         { id: 90, name: 'WBS 90' },
         { id: 99, name: 'WBS 90' },
-    ],
-    workpackages: [
+    ];
+}
+
+function workpackages () {
+    return [
         { id: 1000, parent: 10, name: 'Task 1000', plan: term('2020-09-01', '2021-09-30'), style: { background: '#c1e4e9' } },
         { id: 1001, parent: 10, name: 'Task 1001', plan: term('2020-10-01', '2020-10-31') },
         { id: 2000, parent: 20, name: 'Task 2000', plan: term('2020-11-01', '2020-11-30') },
@@ -59,7 +52,22 @@ const DATA = {
         { id: 9007, parent: 90, name: 'Task 9007', plan: term('2021-09-06', '2021-11-12') },
         { id: 9008, parent: 90, name: 'Task 9008', plan: term('2021-10-18', '2021-11-23') },
         { id: 9900, parent: 99, name: 'Task 9900', plan: term('2020-09-01', '2021-07-31') },
-    ],
+    ];
+}
+
+const DATA = {
+    scale: {
+        // y(years), Q(quarters), M(months), w(weeks), d(days)
+        // h(hours), m(minutes), s(seconds), ms(milliseconds)
+        // cycle: 'M',
+        cycle: 'w',
+        w: 222,
+        start: null,
+        end: null,
+    },
+    groups: [],
+    wbs: wbs(),
+    workpackages: workpackages(),
     style: {
         stage: {
             padding: 22,
@@ -85,6 +93,21 @@ const DATA = {
                 h: 111,
                 padding: 11,
                 background: '#e0ebaf',
+                label: {
+                    h: 122,
+                    margin: { bottom:10 },
+                },
+                plan: {
+                    h: 111,
+                    color: '#e0ebaf',
+                },
+                result: {
+                    shift: 22,
+                    color: '#eeeeee',
+                },
+                progress: {
+                    color: '#eeeeee',
+                },
             },
             background: '#fff',
             // #516f79 line

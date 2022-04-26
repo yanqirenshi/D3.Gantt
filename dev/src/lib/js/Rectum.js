@@ -164,26 +164,30 @@ export default class Rectum extends Colon {
     }
     drawChart (place, data) {
         const fontSize = (d) => {
-            return Math.floor((d.size().h - (d.style.padding * 2)) * 0.7);
+            const h = d._label.size.h;
+
+            return Math.floor((h - (d.style.padding * 2)) * 0.7);
         };
 
         const drawCharts = (rects)=> {
             rects
                 .attr("class", 'chart')
-                .attr("x", d=> d.location().x)
-                .attr("y", d=> d.location().y)
-                .attr("width", d=>  d.size().w)
-                .attr("height", d=> d.size().h)
-                .attr("rx", d=> d.size().h/2)
-                .attr("ry", d=> d.size().h/2)
+                .attr("x", d=> d._plan.location.x)
+                .attr("y", d=> d._plan.location.y)
+                .attr("width", d=>  d._plan.size.w)
+                .attr("height", d=> d._plan.size.h)
+                .attr("rx", d=> d._plan.size.h/2)
+                .attr("ry", d=> d._plan.size.h/2)
                 .attr("fill", d=> d.style.background);
         };
 
         const drawTexts = (texts)=> {
             texts
                 .attr("class", 'chart')
-                .attr("x", d=> d.location().x + (d.style.padding * 3))
-                .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
+                .attr("x", d=> d._label.location.x)
+                .attr("y", d=> d._label.location.y)
+                // .attr("x", d=> d.location().x + (d.style.padding * 3))
+                // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
                 .attr("font-family", "Verdana")
                 .attr("font-size", d=> fontSize(d))
                 .text(d=> d.core.name);

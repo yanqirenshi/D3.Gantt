@@ -61,8 +61,10 @@ export default class Wbs extends Element {
             return ht;
         };
 
+        const tmp = this.layoutChildrenMakeTmp(children);
+
         let before = null;
-        for(const wp_list of this.layoutChildrenMakeTmp(children)) {
+        for(const wp_list of tmp) {
             if (!before) {
                 before = wp_list.reduce(cal, { y:-1, h:-1 });
                 continue;

@@ -25,6 +25,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -44,38 +48,123 @@ var Workpackage = /*#__PURE__*/function (_Element) {
 
   var _super = _createSuper(Workpackage);
 
-  function Workpackage() {
+  function Workpackage(data, style) {
+    var _this;
+
     _classCallCheck(this, Workpackage);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, data, style);
+    var template = {
+      size: {
+        w: 0,
+        h: 0
+      },
+      location: {
+        x: 0,
+        y: 0
+      }
+    };
+    _this._label = _objectSpread({}, template);
+    _this._plan = _objectSpread({}, template);
+    _this._result = _objectSpread({}, template);
+    _this._progress = _objectSpread({}, template);
+    return _this;
   }
 
   _createClass(Workpackage, [{
+    key: "location",
+    value: function location(v) {
+      if (arguments.length === 0) return this._location;
+
+      var location_old = _objectSpread({}, this._location);
+
+      _get(_getPrototypeOf(Workpackage.prototype), "location", this).call(this, v);
+
+      var vec = {
+        x: this._location.x - location_old.x,
+        y: this._location.y - location_old.y
+      };
+
+      var addVec = function addVec(a, b) {
+        return {
+          x: a.x + b.x,
+          y: a.y + b.y
+        };
+      };
+
+      this._label.location = addVec(this._label.location, vec);
+      this._plan.location = addVec(this._plan.location, vec);
+      this._result.location = addVec(this._result.location, vec);
+      this._progress.location = addVec(this._progress.location, vec);
+      return this._location;
+    }
+  }, {
     key: "parentId",
     value: function parentId() {
       return this.core.parent || null;
     }
   }, {
+    key: "stylingLabel",
+    value: function stylingLabel() {
+      var style = this.style;
+      this._label.location.y = style.label.h;
+      this._label.size.h = style.label.h;
+    }
+  }, {
+    key: "stylingPlan",
+    value: function stylingPlan(plan_w) {
+      var style = this.style;
+      this._plan.location.y = style.label.h + style.label.margin.bottom;
+      this._plan.size.w = plan_w;
+      this._plan.size.h = style.plan.h;
+    }
+  }, {
+    key: "stylingResult",
+    value: function stylingResult(result_x, result_w) {
+      var style = this.style;
+      this._result.location.y = style.label.h + style.label.margin.bottom + style.result.shift;
+      this._result.location.x = result_x;
+      this._result.size.w = result_w;
+      this._result.size.h = style.plan.h;
+    }
+  }, {
+    key: "stylingProgress",
+    value: function stylingProgress(plan_w) {
+      var style = this.style;
+      this._progress.location.y = style.label.h;
+      this._progress.size.w = plan_w;
+      this._progress.size.h = style.plan.h;
+    }
+  }, {
     key: "styling",
     value: function styling(scale) {
-      // background を上書きする。
-      if (this.core.style && this.core.style.background) {
+      var core = this.core; // background を上書きする。
+
+      if (core.style && core.style.background) {
         var new_style = _objectSpread({}, this.style);
 
-        new_style.background = this.core.style.background;
+        new_style.background = core.style.background;
         this.style = new_style;
       }
 
-      var plan = this.core.plan;
-      var x = scale(plan.start);
-      var w = scale(plan.end) - x;
+      var style = this.style;
+      var plan = core.plan;
+      var plan_x = scale(plan.start);
+      var plan_w = scale(plan.end) - plan_x;
+      var result = core.result;
+      var result_x = scale(result && result.start ? result.start : core.start);
+      var result_w = scale(result && result.end ? result.end : core.start) - plan_x;
       this.size({
-        w: w,
-        h: this.style.h
+        w: plan_w,
+        h: style.label.h + style.label.margin.bottom + style.plan.h + style.result.shift
       });
       this.location({
-        x: x
+        x: plan_x
       });
+      this.stylingLabel();
+      this.stylingPlan(plan_w);
+      this.stylingResult(result_x, result_w);
+      this.stylingProgress(plan_w);
       return this;
     }
   }]);
