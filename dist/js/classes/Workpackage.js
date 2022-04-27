@@ -104,6 +104,11 @@ var Workpackage = /*#__PURE__*/function (_Element) {
       return this.core.parent || null;
     }
   }, {
+    key: "url",
+    value: function url() {
+      return this.core.url || null;
+    }
+  }, {
     key: "stylingLabel",
     value: function stylingLabel() {
       var style = this.style;

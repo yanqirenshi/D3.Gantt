@@ -228,57 +228,81 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       });
     }
   }, {
-    key: "drawChart",
-    value: function drawChart(place, data) {
+    key: "drawChartTextsWithLink",
+    value: function drawChartTextsWithLink(mode, anchers) {
+      anchers.attr("href", function (d) {
+        return d.url();
+      }).attr('target', "_blank").attr('rel', "noopener noreferrer");
+      if ('enter' === mode) this.drawChartTexts(anchers.append('text'));
+      if ('update' === mode) this.drawChartTexts(anchers.selectAll("text"));
+    }
+  }, {
+    key: "drawChartTexts",
+    value: function drawChartTexts(texts) {
       var fontSize = function fontSize(d) {
         var h = d._label.size.h;
         return Math.floor((h - d.style.padding * 2) * 0.7);
       };
 
-      var drawCharts = function drawCharts(rects) {
-        rects.attr("class", 'chart').attr("x", function (d) {
-          return d._plan.location.x;
-        }).attr("y", function (d) {
-          return d._plan.location.y;
-        }).attr("width", function (d) {
-          return d._plan.size.w;
-        }).attr("height", function (d) {
-          return d._plan.size.h;
-        }).attr("rx", function (d) {
-          return d._plan.size.h / 2;
-        }).attr("ry", function (d) {
-          return d._plan.size.h / 2;
-        }).attr("fill", function (d) {
-          return d.style.background;
-        });
-      };
-
-      var drawTexts = function drawTexts(texts) {
-        texts.attr("class", 'chart').attr("x", function (d) {
-          return d._label.location.x;
-        }).attr("y", function (d) {
-          return d._label.location.y;
-        }) // .attr("x", d=> d.location().x + (d.style.padding * 3))
-        // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
-        .attr("font-family", "Verdana").attr("font-size", function (d) {
-          return fontSize(d);
-        }).text(function (d) {
-          return d.core.name;
-        });
-      };
-
+      return texts.attr("x", function (d) {
+        return d._label.location.x;
+      }).attr("y", function (d) {
+        return d._label.location.y;
+      }) // .attr("x", d=> d.location().x + (d.style.padding * 3))
+      // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
+      .attr("font-family", "Verdana").attr("font-size", function (d) {
+        return fontSize(d);
+      }).text(function (d) {
+        return d.core.name;
+      });
+    }
+  }, {
+    key: "drawChartPlan",
+    value: function drawChartPlan(rects) {
+      rects.attr("x", function (d) {
+        return d._plan.location.x;
+      }).attr("y", function (d) {
+        return d._plan.location.y;
+      }).attr("width", function (d) {
+        return d._plan.size.w;
+      }).attr("height", function (d) {
+        return d._plan.size.h;
+      }).attr("rx", function (d) {
+        return d._plan.size.h / 2;
+      }).attr("ry", function (d) {
+        return d._plan.size.h / 2;
+      }).attr("fill", function (d) {
+        return d.style.background;
+      });
+    }
+  }, {
+    key: "drawChart",
+    value: function drawChart(place, data) {
       var selection = place.selectAll("g.chart").data(data.workpackages.list, function (wp) {
         return wp.id;
       }); // add
 
       var enterd = selection.enter().append("g").attr("class", 'chart');
-      drawCharts(enterd.append("rect"));
-      drawTexts(enterd.append("text")); // update
 
-      drawCharts(selection.selectAll("rect").data(data.workpackages.list, function (wp) {
+      var isText = function isText(d) {
+        return d.url() ? false : true;
+      };
+
+      var isTextWithLink = function isTextWithLink(d) {
+        return d.url() ? true : false;
+      };
+
+      this.drawChartPlan(enterd.append("rect").attr("class", 'chart'));
+      this.drawChartTexts(enterd.filter(isText).append("text").attr("class", 'chart'));
+      this.drawChartTextsWithLink('enter', enterd.filter(isTextWithLink).append("a")); // update
+
+      this.drawChartPlan(selection.selectAll("rect.chart").data(data.workpackages.list, function (wp) {
         return wp.id;
       }));
-      drawTexts(selection.selectAll("text").data(data.workpackages.list, function (wp) {
+      this.drawChartTexts(selection.filter(isText).selectAll("text.chart").data(data.workpackages.list, function (wp) {
+        return wp.id;
+      }));
+      this.drawChartTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(data.workpackages.list, function (wp) {
         return wp.id;
       })); // delete
 
