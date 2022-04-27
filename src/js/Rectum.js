@@ -162,37 +162,46 @@ export default class Rectum extends Colon {
             .attr("height", d=> d.size().h)
             .attr("fill", d=> d.style.background);
     }
-    drawChart (place, data) {
+    drawChartTextsWithLink (mode, anchers) {
+        anchers
+            .attr("href", d=> d.url())
+            .attr('target', "_blank")
+            .attr('rel', "noopener noreferrer");
+
+        if ('enter'===mode)
+            this.drawChartTexts(anchers.append('text'));
+
+        if ('update'===mode)
+            this.drawChartTexts(anchers.selectAll("text"));
+
+    }
+    drawChartTexts (texts) {
         const fontSize = (d) => {
             const h = d._label.size.h;
 
             return Math.floor((h - (d.style.padding * 2)) * 0.7);
         };
 
-        const drawCharts = (rects)=> {
-            rects
-                .attr("class", 'chart')
-                .attr("x", d=> d._plan.location.x)
-                .attr("y", d=> d._plan.location.y)
-                .attr("width", d=>  d._plan.size.w)
-                .attr("height", d=> d._plan.size.h)
-                .attr("rx", d=> d._plan.size.h/2)
-                .attr("ry", d=> d._plan.size.h/2)
-                .attr("fill", d=> d.style.background);
-        };
-
-        const drawTexts = (texts)=> {
-            texts
-                .attr("class", 'chart')
-                .attr("x", d=> d._label.location.x)
-                .attr("y", d=> d._label.location.y)
-                // .attr("x", d=> d.location().x + (d.style.padding * 3))
-                // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
-                .attr("font-family", "Verdana")
-                .attr("font-size", d=> fontSize(d))
-                .text(d=> d.core.name);
-        };
-
+        return texts
+            .attr("x", d=> d._label.location.x)
+            .attr("y", d=> d._label.location.y)
+        // .attr("x", d=> d.location().x + (d.style.padding * 3))
+        // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
+            .attr("font-family", "Verdana")
+            .attr("font-size", d=> fontSize(d))
+            .text(d=> d.core.name);
+    }
+    drawChartPlan (rects) {
+        rects
+            .attr("x", d=> d._plan.location.x)
+            .attr("y", d=> d._plan.location.y)
+            .attr("width", d=>  d._plan.size.w)
+            .attr("height", d=> d._plan.size.h)
+            .attr("rx", d=> d._plan.size.h/2)
+            .attr("ry", d=> d._plan.size.h/2)
+            .attr("fill", d=> d.style.background);
+    }
+    drawChart (place, data) {
         const selection = place
               .selectAll("g.chart")
               .data(data.workpackages.list, (wp)=> wp.id);
@@ -203,12 +212,17 @@ export default class Rectum extends Colon {
               .append("g")
               .attr("class", 'chart');
 
-        drawCharts(enterd.append("rect"));
-        drawTexts(enterd.append("text"));
+        const isText = (d)=> d.url() ? false : true;
+        const isTextWithLink = (d)=> d.url() ? true  : false;
+
+        this.drawChartPlan(enterd.append("rect").attr("class", 'chart'));
+        this.drawChartTexts(enterd.filter(isText).append("text").attr("class", 'chart'));
+        this.drawChartTextsWithLink('enter', enterd.filter(isTextWithLink).append("a"));
 
         // update
-        drawCharts(selection.selectAll("rect").data(data.workpackages.list, (wp)=> wp.id));
-        drawTexts(selection.selectAll("text").data(data.workpackages.list, (wp)=> wp.id));
+        this.drawChartPlan( selection.selectAll("rect.chart").data(data.workpackages.list, (wp)=> wp.id));
+        this.drawChartTexts(selection.filter(isText).selectAll("text.chart").data(data.workpackages.list, (wp)=> wp.id));
+        this.drawChartTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(data.workpackages.list, (wp)=> wp.id));
 
         // delete
         selection.exit().remove();

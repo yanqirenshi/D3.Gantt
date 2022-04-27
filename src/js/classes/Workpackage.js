@@ -45,6 +45,9 @@ export default class Workpackage extends Element {
     parentId () {
         return this.core.parent || null;
     }
+    url () {
+        return this.core.url || null;
+    }
     stylingLabel () {
         const style = this.style;
 

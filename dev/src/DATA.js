@@ -28,7 +28,7 @@ function wbs () {
 function workpackages () {
     return [
         { id: 1000, parent: 10, name: 'Task 1000', plan: term('2020-09-01', '2021-09-30'), style: { background: '#c1e4e9' } },
-        { id: 1001, parent: 10, name: 'Task 1001', plan: term('2020-10-01', '2020-10-31') },
+        { id: 1001, parent: 10, name: 'Task 1001', plan: term('2020-10-01', '2020-10-31'), url: 'https://www.google.com/' },
         { id: 2000, parent: 20, name: 'Task 2000', plan: term('2020-11-01', '2020-11-30') },
         { id: 3000, parent: 30, name: 'Task 3000', plan: term('2020-11-15', '2021-01-31') },
         { id: 4000, parent: 40, name: 'Task 4000', plan: term('2021-01-01', '2021-04-15') },
