@@ -191,6 +191,16 @@ export default class Rectum extends Colon {
             .attr("font-size", d=> fontSize(d))
             .text(d=> d.core.name);
     }
+    drawChartResult (rects) {
+        rects
+            .attr("x", d=> d._result.location.x)
+            .attr("y", d=> d._result.location.y)
+            .attr("width", d=>  d._result.size.w)
+            .attr("height", d=> d._result.size.h)
+            .attr("rx", d=> d._result.size.h/2)
+            .attr("ry", d=> d._result.size.h/2)
+            .attr("fill", d=> d.style.result.background);
+    }
     drawChartPlan (rects) {
         rects
             .attr("x", d=> d._plan.location.x)
@@ -199,7 +209,7 @@ export default class Rectum extends Colon {
             .attr("height", d=> d._plan.size.h)
             .attr("rx", d=> d._plan.size.h/2)
             .attr("ry", d=> d._plan.size.h/2)
-            .attr("fill", d=> d.style.background);
+            .attr("fill", d=> d.style.plan.background);
     }
     drawChart (place, data) {
         const selection = place
@@ -215,12 +225,14 @@ export default class Rectum extends Colon {
         const isText = (d)=> d.url() ? false : true;
         const isTextWithLink = (d)=> d.url() ? true  : false;
 
+        this.drawChartResult(enterd.append("rect").attr("class", 'result'));
         this.drawChartPlan(enterd.append("rect").attr("class", 'chart'));
         this.drawChartTexts(enterd.filter(isText).append("text").attr("class", 'chart'));
         this.drawChartTextsWithLink('enter', enterd.filter(isTextWithLink).append("a"));
 
         // update
-        this.drawChartPlan( selection.selectAll("rect.chart").data(data.workpackages.list, (wp)=> wp.id));
+        this.drawChartResult(selection.selectAll("rect.result").data(data.workpackages.list, (wp)=> wp.id));
+        this.drawChartPlan(selection.selectAll("rect.chart").data(data.workpackages.list, (wp)=> wp.id));
         this.drawChartTexts(selection.filter(isText).selectAll("text.chart").data(data.workpackages.list, (wp)=> wp.id));
         this.drawChartTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(data.workpackages.list, (wp)=> wp.id));
 
