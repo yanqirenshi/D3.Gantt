@@ -54,20 +54,24 @@ var Workpackage = /*#__PURE__*/function (_Element) {
     _classCallCheck(this, Workpackage);
 
     _this = _super.call(this, data, style);
-    var template = {
-      size: {
-        w: 0,
-        h: 0
-      },
-      location: {
-        x: 0,
-        y: 0
-      }
+
+    var template = function template() {
+      return {
+        size: {
+          w: 0,
+          h: 0
+        },
+        location: {
+          x: 0,
+          y: 0
+        }
+      };
     };
-    _this._label = _objectSpread({}, template);
-    _this._plan = _objectSpread({}, template);
-    _this._result = _objectSpread({}, template);
-    _this._progress = _objectSpread({}, template);
+
+    _this._label = template();
+    _this._plan = template();
+    _this._result = template();
+    _this._progress = template();
     return _this;
   }
 
@@ -134,11 +138,55 @@ var Workpackage = /*#__PURE__*/function (_Element) {
     }
   }, {
     key: "stylingProgress",
-    value: function stylingProgress(plan_w) {
+    value: function stylingProgress(core, plan_w) {
+      var progress = function () {
+        if (!core.progress) return 0;
+        if (core.progress > 100) return 100;
+        if (core.progress < 0) return 0;
+        return core.progress;
+      }();
+
       var style = this.style;
-      this._progress.location.y = style.label.h;
-      this._progress.size.w = plan_w;
-      this._progress.size.h = style.plan.h;
+      this._progress.location.y = style.label.h + style.label.margin.bottom;
+      this._progress.size.w = progress === 0 || plan_w === 0 ? 0 : plan_w * (progress / 100);
+      this._progress.size.h = style.progress.h;
+    }
+  }, {
+    key: "calRect",
+    value: function calRect(type, core, scale, style) {
+      var term = core[type];
+      var x = 0,
+          y = 0,
+          w = 0,
+          h = 0;
+
+      var result = function result() {
+        return {
+          x: x,
+          y: y,
+          w: w,
+          h: h
+        };
+      };
+
+      if (!term) return result();
+      var start = term.start;
+      var end = term.end;
+
+      if (type === 'plan') {
+        if (!start || !end) return result();
+        x = scale(start);
+        w = scale(end) - x;
+        h = style[type].h;
+      } else {
+        if (!start) return result();
+        x = scale(start);
+        y = style[type].shift || 0;
+        w = scale(end || (0, _moment["default"])()) - x;
+        h = style[type].h;
+      }
+
+      return result();
     }
   }, {
     key: "styling",
@@ -153,23 +201,19 @@ var Workpackage = /*#__PURE__*/function (_Element) {
       }
 
       var style = this.style;
-      var plan = core.plan;
-      var plan_x = scale(plan.start);
-      var plan_w = scale(plan.end) - plan_x;
-      var result = core.result;
-      var result_x = scale(result && result.start ? result.start : core.start);
-      var result_w = scale(result && result.end ? result.end : core.start) - plan_x;
+      var plan_rect = this.calRect('plan', core, scale, style);
+      var result_rect = this.calRect('result', core, scale, style);
       this.size({
-        w: plan_w,
+        w: plan_rect.w,
         h: style.label.h + style.label.margin.bottom + style.plan.h + style.result.shift
       });
       this.location({
-        x: plan_x
+        x: plan_rect.x
       });
       this.stylingLabel();
-      this.stylingPlan(plan_w);
-      this.stylingResult(result_x, result_w);
-      this.stylingProgress(plan_w);
+      this.stylingPlan(plan_rect.w);
+      this.stylingResult(result_rect.x, result_rect.w);
+      this.stylingProgress(core, plan_rect.w);
       return this;
     }
   }]);

@@ -5,15 +5,15 @@ export default class Workpackage extends Element {
     constructor (data, style) {
         super(data, style);
 
-        const template = {
+        const template = () => ({
             size:     { w:0, h:0 },
             location: { x:0, y:0 },
-        };
+        });
 
-        this._label    = { ...template };
-        this._plan     = { ...template };
-        this._result   = { ...template };
-        this._progress = { ...template };
+        this._label    = template();
+        this._plan     = template();
+        this._result   = template();
+        this._progress = template();
     }
     location (v) {
         if (arguments.length===0)
@@ -69,12 +69,48 @@ export default class Workpackage extends Element {
         this._result.size.w = result_w;
         this._result.size.h = style.plan.h;
     }
-    stylingProgress (plan_w) {
+    stylingProgress (core, plan_w) {
+        const progress = (()=> {
+            if (!core.progress)    return 0;
+            if (core.progress>100) return 100;
+            if (core.progress<0)   return 0;
+            return core.progress;
+        })();
+
         const style = this.style;
 
-        this._progress.location.y = style.label.h;
-        this._progress.size.w = plan_w;
-        this._progress.size.h = style.plan.h;
+        this._progress.location.y = style.label.h + style.label.margin.bottom;
+        this._progress.size.w = (progress===0 || plan_w===0) ? 0 : plan_w * (progress / 100);
+        this._progress.size.h = style.progress.h;
+    }
+    calRect (type, core, scale, style) {
+        const term = core[type];
+
+        let x = 0, y = 0, w = 0, h = 0;
+
+        const result = () => ({ x: x, y: y, w: w, h: h });
+
+        if (!term) return result();
+
+        const start = term.start;
+        const end   = term.end;
+
+        if (type==='plan') {
+            if (!start || !end) return result();
+
+            x = scale(start);
+            w = scale(end) - x;
+            h = style[type].h;
+        } else {
+            if (!start) return result();
+
+            x = scale(start);
+            y = style[type].shift || 0;
+            w = scale(end || moment()) - x;
+            h = style[type].h;
+        }
+
+        return result();
     }
     styling (scale) {
         const core = this.core;
@@ -90,29 +126,23 @@ export default class Workpackage extends Element {
 
         const style = this.style;
 
-        const plan = core.plan;
-        const plan_x = scale(plan.start);
-        const plan_w = scale(plan.end) - plan_x;
-
-        const result   = core.result;
-        const result_x = scale(result && result.start ? result.start : core.start);
-        const result_w = scale(result && result.end   ? result.end   : core.start) - plan_x;
+        const plan_rect   = this.calRect('plan', core, scale, style);
+        const result_rect = this.calRect('result', core, scale, style);
 
         this.size({
-            w: plan_w,
+            w: plan_rect.w,
             h: style.label.h
                 + style.label.margin.bottom
                 + style.plan.h
                 + style.result.shift,
         });
 
-        this.location({ x: plan_x });
+        this.location({ x: plan_rect.x });
 
         this.stylingLabel();
-
-        this.stylingPlan(plan_w);
-        this.stylingResult(result_x, result_w);
-        this.stylingProgress(plan_w);
+        this.stylingPlan(plan_rect.w);
+        this.stylingResult(result_rect.x, result_rect.w);
+        this.stylingProgress(core, plan_rect.w);
 
         return this;
     }

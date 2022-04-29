@@ -257,6 +257,25 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       });
     }
   }, {
+    key: "drawChartResult",
+    value: function drawChartResult(rects) {
+      rects.attr("x", function (d) {
+        return d._result.location.x;
+      }).attr("y", function (d) {
+        return d._result.location.y;
+      }).attr("width", function (d) {
+        return d._result.size.w;
+      }).attr("height", function (d) {
+        return d._result.size.h;
+      }).attr("rx", function (d) {
+        return d._result.size.h / 2;
+      }).attr("ry", function (d) {
+        return d._result.size.h / 2;
+      }).attr("fill", function (d) {
+        return d.style.result.background;
+      });
+    }
+  }, {
     key: "drawChartPlan",
     value: function drawChartPlan(rects) {
       rects.attr("x", function (d) {
@@ -272,7 +291,27 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       }).attr("ry", function (d) {
         return d._plan.size.h / 2;
       }).attr("fill", function (d) {
-        return d.style.background;
+        return d.style.plan.background;
+      });
+    }
+  }, {
+    key: "drawChartProgress",
+    value: function drawChartProgress(rects) {
+      rects.attr("x", function (d) {
+        return d._progress.location.x;
+      }).attr("y", function (d) {
+        return d._progress.location.y;
+      }).attr("width", function (d) {
+        return d._progress.size.w;
+      }).attr("height", function (d) {
+        console.log(d._progress.size);
+        return d._progress.size.h;
+      }).attr("rx", function (d) {
+        return d._progress.size.h / 2;
+      }).attr("ry", function (d) {
+        return d._progress.size.h / 2;
+      }).attr("fill", function (d) {
+        return d.style.progress.background;
       });
     }
   }, {
@@ -292,17 +331,34 @@ var Rectum = /*#__PURE__*/function (_Colon) {
         return d.url() ? true : false;
       };
 
+      this.drawChartResult(enterd.filter(function (d) {
+        return d._result.size.w > 0;
+      }).append("rect").attr("class", 'result'));
       this.drawChartPlan(enterd.append("rect").attr("class", 'chart'));
+      this.drawChartProgress(enterd.filter(function (d) {
+        return d._progress.size.w > 0;
+      }).append("rect").attr("class", 'progress-chart'));
       this.drawChartTexts(enterd.filter(isText).append("text").attr("class", 'chart'));
       this.drawChartTextsWithLink('enter', enterd.filter(isTextWithLink).append("a")); // update
 
-      this.drawChartPlan(selection.selectAll("rect.chart").data(data.workpackages.list, function (wp) {
+      var workpackages = data.workpackages.list;
+      this.drawChartResult(selection.filter(function (d) {
+        return d._result.size.w > 0;
+      }).selectAll("rect.result").data(workpackages, function (wp) {
         return wp.id;
       }));
-      this.drawChartTexts(selection.filter(isText).selectAll("text.chart").data(data.workpackages.list, function (wp) {
+      this.drawChartPlan(selection.selectAll("rect.chart").data(workpackages, function (wp) {
         return wp.id;
       }));
-      this.drawChartTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(data.workpackages.list, function (wp) {
+      this.drawChartProgress(selection.filter(function (d) {
+        return d._progress.size.w > 0;
+      }).selectAll("rect.progress-chart").data(workpackages, function (wp) {
+        return wp.id;
+      }));
+      this.drawChartTexts(selection.filter(isText).selectAll("text.chart").data(workpackages, function (wp) {
+        return wp.id;
+      }));
+      this.drawChartTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(workpackages, function (wp) {
         return wp.id;
       })); // delete
 
