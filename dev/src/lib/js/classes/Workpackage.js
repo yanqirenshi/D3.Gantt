@@ -69,12 +69,19 @@ export default class Workpackage extends Element {
         this._result.size.w = result_w;
         this._result.size.h = style.plan.h;
     }
-    stylingProgress (plan_w) {
+    stylingProgress (core, plan_w) {
+        const progress = (()=> {
+            if (!core.progress)    return 0;
+            if (core.progress>100) return 100;
+            if (core.progress<0)   return 0;
+            return core.progress;
+        })();
+
         const style = this.style;
 
-        this._progress.location.y = style.label.h;
-        this._progress.size.w = plan_w;
-        this._progress.size.h = style.plan.h;
+        this._progress.location.y = style.label.h + style.label.margin.bottom;
+        this._progress.size.w = (progress===0 || plan_w===0) ? 0 : plan_w * (progress / 100);
+        this._progress.size.h = style.progress.h;
     }
     calRect (type, core, scale, style) {
         const term = core[type];
@@ -133,11 +140,9 @@ export default class Workpackage extends Element {
         this.location({ x: plan_rect.x });
 
         this.stylingLabel();
-
         this.stylingPlan(plan_rect.w);
-
         this.stylingResult(result_rect.x, result_rect.w);
-        this.stylingProgress(plan_rect.w);
+        this.stylingProgress(core, plan_rect.w);
 
         return this;
     }

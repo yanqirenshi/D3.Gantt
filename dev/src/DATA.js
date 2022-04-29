@@ -37,6 +37,7 @@ function workpackages () {
             id: 1001, parent: 10, name: 'Task 1001',
             plan: term('2020-10-01', '2020-10-31'),
             result: term('2020-10-05', null),
+            progress: 95,
             url: 'https://www.google.com/',
         },
         {
@@ -179,17 +180,16 @@ const DATA = {
                 },
                 plan: {
                     h: 111,
-                    color: '#e0ebaf',
-                    background: '#e0ebaf'
+                    background: '#e0ebaf',
                 },
                 result: {
                     h: 111,
                     shift: 22,
-                    color: '#eeeeee',
-                    background: '#eeeeee'
+                    background: '#eeeeee',
                 },
                 progress: {
-                    color: '#eeeeee',
+                    h: 111,
+                    background: '#f00',
                 },
             },
             background: '#fff',
