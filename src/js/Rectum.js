@@ -209,7 +209,12 @@ export default class Rectum extends Colon {
             .attr("height", d=> d._plan.size.h)
             .attr("rx", d=> d._plan.size.h/2)
             .attr("ry", d=> d._plan.size.h/2)
-            .attr("fill", d=> d.style.plan.background);
+            .attr("fill", d=> {
+                if (d.core.style && d.core.style.background)
+                    return d.core.style.background;
+
+                return d.style.plan.background;
+            });
     }
     drawChartProgress (rects) {
         rects

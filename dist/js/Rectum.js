@@ -291,6 +291,7 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       }).attr("ry", function (d) {
         return d._plan.size.h / 2;
       }).attr("fill", function (d) {
+        if (d.core.style && d.core.style.background) return d.core.style.background;
         return d.style.plan.background;
       });
     }
