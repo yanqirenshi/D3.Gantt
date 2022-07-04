@@ -11,6 +11,12 @@ var _assh0le = require("@yanqirenshi/assh0le");
 
 var _Stylist = _interopRequireDefault(require("./Stylist.js"));
 
+var Painter = _interopRequireWildcard(require("./painter/index.js"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -228,144 +234,6 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       });
     }
   }, {
-    key: "drawChartTextsWithLink",
-    value: function drawChartTextsWithLink(mode, anchers) {
-      anchers.attr("href", function (d) {
-        return d.url();
-      }).attr('target', "_blank").attr('rel', "noopener noreferrer");
-      if ('enter' === mode) this.drawChartTexts(anchers.append('text'));
-      if ('update' === mode) this.drawChartTexts(anchers.selectAll("text"));
-    }
-  }, {
-    key: "drawChartTexts",
-    value: function drawChartTexts(texts) {
-      var fontSize = function fontSize(d) {
-        var h = d._label.size.h;
-        return Math.floor((h - d.style.padding * 2) * 0.7);
-      };
-
-      return texts.attr("x", function (d) {
-        return d._label.location.x;
-      }).attr("y", function (d) {
-        return d._label.location.y;
-      }) // .attr("x", d=> d.location().x + (d.style.padding * 3))
-      // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
-      .attr("font-family", "Verdana").attr("font-size", function (d) {
-        return fontSize(d);
-      }).text(function (d) {
-        return d.core.name;
-      });
-    }
-  }, {
-    key: "drawChartResult",
-    value: function drawChartResult(rects) {
-      rects.attr("x", function (d) {
-        return d._result.location.x;
-      }).attr("y", function (d) {
-        return d._result.location.y;
-      }).attr("width", function (d) {
-        return d._result.size.w;
-      }).attr("height", function (d) {
-        return d._result.size.h;
-      }).attr("rx", function (d) {
-        return d._result.size.h / 2;
-      }).attr("ry", function (d) {
-        return d._result.size.h / 2;
-      }).attr("fill", function (d) {
-        return d.style.result.background;
-      });
-    }
-  }, {
-    key: "drawChartPlan",
-    value: function drawChartPlan(rects) {
-      rects.attr("x", function (d) {
-        return d._plan.location.x;
-      }).attr("y", function (d) {
-        return d._plan.location.y;
-      }).attr("width", function (d) {
-        return d._plan.size.w;
-      }).attr("height", function (d) {
-        return d._plan.size.h;
-      }).attr("rx", function (d) {
-        return d._plan.size.h / 2;
-      }).attr("ry", function (d) {
-        return d._plan.size.h / 2;
-      }).attr("fill", function (d) {
-        if (d.core.style && d.core.style.background) return d.core.style.background;
-        return d.style.plan.background;
-      });
-    }
-  }, {
-    key: "drawChartProgress",
-    value: function drawChartProgress(rects) {
-      rects.attr("x", function (d) {
-        return d._progress.location.x;
-      }).attr("y", function (d) {
-        return d._progress.location.y;
-      }).attr("width", function (d) {
-        return d._progress.size.w;
-      }).attr("height", function (d) {
-        console.log(d._progress.size);
-        return d._progress.size.h;
-      }).attr("rx", function (d) {
-        return d._progress.size.h / 2;
-      }).attr("ry", function (d) {
-        return d._progress.size.h / 2;
-      }).attr("fill", function (d) {
-        return d.style.progress.background;
-      });
-    }
-  }, {
-    key: "drawChart",
-    value: function drawChart(place, data) {
-      var selection = place.selectAll("g.chart").data(data.workpackages.list, function (wp) {
-        return wp.id;
-      }); // add
-
-      var enterd = selection.enter().append("g").attr("class", 'chart');
-
-      var isText = function isText(d) {
-        return d.url() ? false : true;
-      };
-
-      var isTextWithLink = function isTextWithLink(d) {
-        return d.url() ? true : false;
-      };
-
-      this.drawChartResult(enterd.filter(function (d) {
-        return d._result.size.w > 0;
-      }).append("rect").attr("class", 'result'));
-      this.drawChartPlan(enterd.append("rect").attr("class", 'chart'));
-      this.drawChartProgress(enterd.filter(function (d) {
-        return d._progress.size.w > 0;
-      }).append("rect").attr("class", 'progress-chart'));
-      this.drawChartTexts(enterd.filter(isText).append("text").attr("class", 'chart'));
-      this.drawChartTextsWithLink('enter', enterd.filter(isTextWithLink).append("a")); // update
-
-      var workpackages = data.workpackages.list;
-      this.drawChartResult(selection.filter(function (d) {
-        return d._result.size.w > 0;
-      }).selectAll("rect.result").data(workpackages, function (wp) {
-        return wp.id;
-      }));
-      this.drawChartPlan(selection.selectAll("rect.chart").data(workpackages, function (wp) {
-        return wp.id;
-      }));
-      this.drawChartProgress(selection.filter(function (d) {
-        return d._progress.size.w > 0;
-      }).selectAll("rect.progress-chart").data(workpackages, function (wp) {
-        return wp.id;
-      }));
-      this.drawChartTexts(selection.filter(isText).selectAll("text.chart").data(workpackages, function (wp) {
-        return wp.id;
-      }));
-      this.drawChartTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(workpackages, function (wp) {
-        return wp.id;
-      })); // delete
-
-      selection.exit().remove();
-    }
-  }, {
     key: "drawNow",
     value: function drawNow(place, data) {
       var selection = place.selectAll("line.now").data([data.now]);
@@ -403,7 +271,7 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       this.drawBodyGrid(place, data);
       this.drawHeadGrit(place, data);
       this.drawNow(place, data);
-      this.drawChart(place, data);
+      new Painter.Charts().draw(place, data);
     }
   }, {
     key: "styling",
