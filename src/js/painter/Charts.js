@@ -60,10 +60,7 @@ export default class Charts {
             })
             .attr("y", d=> d._progress.location.y)
             .attr("width", d=>  d._progress.size.w)
-            .attr("height", d=> {
-                console.log(d._progress.size);
-                return d._progress.size.h;
-            })
+            .attr("height", d=> d._progress.size.h)
             .attr("rx", d=> d._progress.size.h/2)
             .attr("ry", d=> d._progress.size.h/2)
             .attr("fill", d=> d.style.progress.background);

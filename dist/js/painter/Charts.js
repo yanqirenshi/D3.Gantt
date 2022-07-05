@@ -94,7 +94,6 @@ var Charts = /*#__PURE__*/function () {
       }).attr("width", function (d) {
         return d._progress.size.w;
       }).attr("height", function (d) {
-        console.log(d._progress.size);
         return d._progress.size.h;
       }).attr("rx", function (d) {
         return d._progress.size.h / 2;
