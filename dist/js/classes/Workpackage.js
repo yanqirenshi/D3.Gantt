@@ -152,8 +152,12 @@ var Workpackage = /*#__PURE__*/function (_Element) {
       this._progress.size.h = style.progress.h;
     }
   }, {
+    key: "calRectBefore",
+    value: function calRectBefore(type, core, scale, style) {}
+  }, {
     key: "calRect",
     value: function calRect(type, core, scale, style) {
+      this.calRectBefore(type, core, scale, style);
       var term = core[type];
       var x = 0,
           y = 0,
