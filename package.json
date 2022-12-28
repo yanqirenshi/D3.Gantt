@@ -1,6 +1,6 @@
 {
     "name": "@yanqirenshi/d3.gantt",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "description": "See `src/index.html`",
     "main": "dist/index.js",
     "directories": {
@@ -26,7 +26,7 @@
         "react-dom": "^17.0.1"
     },
     "dependencies": {
-        "@yanqirenshi/assh0le": "^0.2.9",
+        "@yanqirenshi/assh0le": "^0.2.12",
         "moment": "^2.29.1"
     },
     "devDependencies": {
