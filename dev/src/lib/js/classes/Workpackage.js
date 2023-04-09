@@ -83,7 +83,11 @@ export default class Workpackage extends Element {
         this._progress.size.w = (progress===0 || plan_w===0) ? 0 : plan_w * (progress / 100);
         this._progress.size.h = style.progress.h;
     }
+    calRectBefore (type, core, scale, style) {
+    }
     calRect (type, core, scale, style) {
+        this.calRectBefore(type, core, scale, style);
+
         const term = core[type];
 
         let x = 0, y = 0, w = 0, h = 0;
