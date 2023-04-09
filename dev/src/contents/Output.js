@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import D3Gantt, {Rectum} from './lib/index.js';
+import D3Gantt, {Rectum} from '../lib/index.js';
 import OutputController from './OutputController.js';
 
 const rectum = new Rectum({
