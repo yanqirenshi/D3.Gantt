@@ -9,7 +9,5 @@ Object.defineProperty(exports, "Charts", {
     return _Charts["default"];
   }
 });
-
 var _Charts = _interopRequireDefault(require("./Charts.js"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }

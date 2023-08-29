@@ -1,49 +1,32 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-
 var _moment = _interopRequireDefault(require("moment"));
-
 var d3 = _interopRequireWildcard(require("d3"));
-
 var Classes = _interopRequireWildcard(require("./Classes.js"));
-
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var Stylist = /*#__PURE__*/function () {
   function Stylist() {
     _classCallCheck(this, Stylist);
   }
-
   _createClass(Stylist, [{
     key: "makePool",
     value: function makePool(list) {
@@ -76,7 +59,6 @@ var Stylist = /*#__PURE__*/function () {
         ht[d.parent].push(d);
         return ht;
       };
-
       var groups = this.makePool(data.groups);
       var wbs = this.makePool(data.wbs);
       var workpackages = this.makePool(data.workpackages);
@@ -96,10 +78,8 @@ var Stylist = /*#__PURE__*/function () {
     value: function stylingWorkpackages(style, scale, data) {
       var pool = this.makePool();
       var index = {};
-
       var _iterator = _createForOfIteratorHelper(data.workpackages),
-          _step;
-
+        _step;
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var wp = _step.value;
@@ -116,7 +96,6 @@ var Stylist = /*#__PURE__*/function () {
       } finally {
         _iterator.f();
       }
-
       return {
         pool: pool,
         index: index
@@ -127,10 +106,8 @@ var Stylist = /*#__PURE__*/function () {
     value: function stylingWBS(style, data, index) {
       var pool = this.makePool();
       var before = null;
-
       var _iterator2 = _createForOfIteratorHelper(data.wbs),
-          _step2;
-
+        _step2;
       try {
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var wbs_data = _step2.value;
@@ -149,7 +126,6 @@ var Stylist = /*#__PURE__*/function () {
       } finally {
         _iterator2.f();
       }
-
       return pool;
     }
   }, {
@@ -179,10 +155,8 @@ var Stylist = /*#__PURE__*/function () {
         h: 0
       };
       var h = 0;
-
       var _iterator3 = _createForOfIteratorHelper(pools.wbs.list),
-          _step3;
-
+        _step3;
       try {
         for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var wbs = _step3.value;
@@ -202,7 +176,6 @@ var Stylist = /*#__PURE__*/function () {
       } finally {
         _iterator3.f();
       }
-
       ;
       size.h = h;
       var obj = new Classes.Body({}, style.body);
@@ -236,10 +209,8 @@ var Stylist = /*#__PURE__*/function () {
       pools.head.location().y = pools.head.location().y + padding;
       pools.body.location().y = pools.body.location().y + padding;
       pools.foot.location().y = pools.foot.location().y + padding;
-
       var _iterator4 = _createForOfIteratorHelper(pools.wbs.list),
-          _step4;
-
+        _step4;
       try {
         for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
           var wbs = _step4.value;
@@ -253,10 +224,8 @@ var Stylist = /*#__PURE__*/function () {
       } finally {
         _iterator4.f();
       }
-
       var _iterator5 = _createForOfIteratorHelper(pools.workpackages.list),
-          _step5;
-
+        _step5;
       try {
         for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
           var wp = _step5.value;
@@ -271,7 +240,6 @@ var Stylist = /*#__PURE__*/function () {
       } finally {
         _iterator5.f();
       }
-
       var w = pools.stage.w();
       obj.size({
         w: w,
@@ -289,10 +257,8 @@ var Stylist = /*#__PURE__*/function () {
         start: null,
         end: null
       };
-
       var _iterator6 = _createForOfIteratorHelper(pools.workpackages),
-          _step6;
-
+        _step6;
       try {
         for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
           var wp = _step6.value;
@@ -304,7 +270,6 @@ var Stylist = /*#__PURE__*/function () {
       } finally {
         _iterator6.f();
       }
-
       return out;
     }
   }, {
@@ -333,7 +298,6 @@ var Stylist = /*#__PURE__*/function () {
       var start = (0, _moment["default"])(term.start);
       var end = (0, _moment["default"])(term.end);
       var cell_start = (0, _moment["default"])(start);
-
       while (cell_start.isBefore(end)) {
         var cell_end = (0, _moment["default"])(cell_start).add('d', 1);
         var x_start = scale(cell_start.toDate());
@@ -353,7 +317,6 @@ var Stylist = /*#__PURE__*/function () {
         cells.push(obj);
         cell_start.add('M', 1);
       }
-
       return cells;
     }
   }, {
@@ -364,10 +327,10 @@ var Stylist = /*#__PURE__*/function () {
       var cells = [];
       var start = (0, _moment["default"])(term.start);
       var end = (0, _moment["default"])(term.end);
-      var h = pools.head._size.h + pools.body._size.h + pools.foot._size.h; // 月次の線を追加
+      var h = pools.head._size.h + pools.body._size.h + pools.foot._size.h;
 
+      // 月次の線を追加
       var cell_start = (0, _moment["default"])(start);
-
       while (cell_start.isBefore(end)) {
         var x_start = scale(cell_start.toDate());
         var obj = {
@@ -387,18 +350,16 @@ var Stylist = /*#__PURE__*/function () {
         };
         if (obj.location.x > 0) cells.push(obj);
         cell_start.add('M', 1);
-      } // 週次の線を追加
+      }
 
-
+      // 週次の線を追加
       if (cycle === 'w') {
         // 週の始め(月曜日)を算出
         var week_start = (0, _moment["default"])(term.start);
         if (week_start.day() > 0) week_start.startOf('week');
         week_start.add(1, 'd');
-
         while (week_start.isBefore(end)) {
           var _x_start = scale(week_start.toDate());
-
           var _obj = {
             location: {
               x: _x_start,
@@ -418,7 +379,6 @@ var Stylist = /*#__PURE__*/function () {
           week_start.add(1, 'w');
         }
       }
-
       return cells;
     }
   }, {
@@ -472,8 +432,6 @@ var Stylist = /*#__PURE__*/function () {
       return models;
     }
   }]);
-
   return Stylist;
 }();
-
 exports["default"] = Stylist;

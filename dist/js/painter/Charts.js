@@ -4,18 +4,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var Charts = /*#__PURE__*/function () {
   function Charts() {
     _classCallCheck(this, Charts);
   }
-
   _createClass(Charts, [{
     key: "drawTextsWithLink",
     value: function drawTextsWithLink(mode, anchers) {
@@ -32,12 +30,12 @@ var Charts = /*#__PURE__*/function () {
         var h = d._label.size.h;
         return Math.floor((h - d.style.padding * 2) * 0.7);
       };
-
       return texts.attr("x", function (d) {
         return d._label.location.x;
       }).attr("y", function (d) {
         return d._label.location.y;
-      }) // .attr("x", d=> d.location().x + (d.style.padding * 3))
+      })
+      // .attr("x", d=> d.location().x + (d.style.padding * 3))
       // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
       .attr("font-family", "Verdana").attr("font-size", function (d) {
         return fontSize(d);
@@ -108,22 +106,19 @@ var Charts = /*#__PURE__*/function () {
     value: function draw(place, data) {
       var selection = place.selectAll("g.chart").data(data.workpackages.list, function (wp) {
         return wp.id;
-      }); // add
+      });
 
+      // add
       var enterd = selection.enter().append("g").attr("class", 'chart');
-
       var isText = function isText(d) {
         return d.url() ? false : true;
       };
-
       var isTextWithLink = function isTextWithLink(d) {
         return d.url() ? true : false;
       };
-
       var eqWp = function eqWp(wp) {
         return wp.id;
       };
-
       this.drawResult(enterd.filter(function (d) {
         return d._result.size.w > 0;
       }).append("rect").attr("class", 'result'));
@@ -132,8 +127,9 @@ var Charts = /*#__PURE__*/function () {
         return d._progress.size.w > 0;
       }).append("rect").attr("class", 'progress-chart'));
       this.drawTexts(enterd.filter(isText).append("text").attr("class", 'chart'));
-      this.drawTextsWithLink('enter', enterd.filter(isTextWithLink).append("a")); // update
+      this.drawTextsWithLink('enter', enterd.filter(isTextWithLink).append("a"));
 
+      // update
       var workpackages = data.workpackages.list;
       this.drawResult(selection.filter(function (d) {
         return d._result.size.w > 0;
@@ -143,13 +139,12 @@ var Charts = /*#__PURE__*/function () {
         return d._progress.size.w > 0;
       }).selectAll("rect.progress-chart").data(workpackages, eqWp));
       this.drawTexts(selection.filter(isText).selectAll("text.chart").data(workpackages, eqWp));
-      this.drawTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(workpackages, eqWp)); // delete
+      this.drawTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(workpackages, eqWp));
 
+      // delete
       selection.exit().remove();
     }
   }]);
-
   return Charts;
 }();
-
 exports["default"] = Charts;
