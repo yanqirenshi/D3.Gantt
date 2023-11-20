@@ -4,10 +4,10 @@ export default class Wbs extends Element {
     padding () {
         return this.style.padding || 0;
     }
-    layoutChildrenAddTemp (wp, tmp) {
-
-        // 矩形が被るものがないか確認する。 被る=true, 被らない=false
-        // const isPuton = (targets) => {
+    /**
+     * 矩形が被るものがないか確認する。 被る=true, 被らない=false
+     */
+    isPuton (targets) {
         //     for (const target of targets) {
         //         const wp_l = wp.location();
         //         const wp_s = wp.size();
@@ -20,14 +20,22 @@ export default class Wbs extends Element {
         //     }
 
         //     return false;
-        // };
+
         // TODO: 仮設
+        return true;
+    }
+    /**
+     * Workpackage のチャートが被るかどうかを整える。(2/2)
+     */
+    layoutChildrenAddTemp (wp, tmp) {
         const isPuton = (targets) => true;
 
         for (const wp_list of tmp) {
-            if (isPuton(wp_list))
+            // wp が 他 wp と被る場合、別の段での表示にする。
+            if (this.isPuton(wp_list))
                 continue;
 
+            // wp が 他 wp と被らない場合、同じ段での表示にする。
             wp_list.push(wp);
 
             return;
@@ -35,6 +43,9 @@ export default class Wbs extends Element {
 
         tmp.push([wp]);
     }
+    /**
+     * Workpackage のチャートが被るかどうかを整える。(1/2)
+     */
     layoutChildrenMakeTmp (children) {
         const func = (tmp, child)=>{
 
@@ -61,8 +72,10 @@ export default class Wbs extends Element {
             return ht;
         };
 
+        // Workpackage のチャートが被るかどうかを整える。
         const tmp = this.layoutChildrenMakeTmp(children);
 
+        // TODO: 現在は Workpackage のみを children の対象としている。
         let before = null;
         for(const wp_list of tmp) {
             if (!before) {
@@ -88,13 +101,19 @@ export default class Wbs extends Element {
 
         return h;
     }
+    /** ****************************************************************
+     * @children List: Wbs, Workpackage
+     * **************************************************************** */
     styling (children) {
         this.layoutChildren(children);
 
+        // TODO: 一度計算する?
         this.childrenH(children);
 
+        // TODO: 再度計算する?
         const children_h = this.childrenH(children);
 
+        // TODO: 再々度計算する?
         const h = children_h===0 ? this.style.h : this.childrenH(children) + (this.style.padding * 2 || 0);
 
         this.size({ w: 888, h: h });

@@ -376,18 +376,23 @@ export default class Stylist {
 
         models.timescale = this.makeHeaderCells(style, models);
 
+        // まず Workpackage をスタイリング
         const ret = this.stylingWorkpackages(style, models.scale, data);
         models.workpackages = ret.pool;
         models.indexWpKeyParent = ret.index;
 
+        // 次に Wbs をスタイリング
         models.wbs = this.stylingWBS(style, data, models.indexWpKeyParent);
 
+        // その後 Heac, Body, Foot をスタイリング
         models.head = this.stylingHead(style, models);
         models.body = this.stylingBody(style, models);
         models.foot = this.stylingFoot(style, models);
 
+        // 日別線を描画
         models.grid = this.makeGrid(data.scale.cycle, style, models);
 
+        // 当日線を描画
         models.now = this.makeNow (style, models);
 
         this.stylingStage(models);

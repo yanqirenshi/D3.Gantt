@@ -89,12 +89,16 @@ export default class Wbs extends Element {
         return h;
     }
     styling (children) {
+        // 子供達の位置を決める。
         this.layoutChildren(children);
 
+        // 子供達の高さを算出する。
         this.childrenH(children);
 
+        // TODO: ???
         const children_h = this.childrenH(children);
 
+        // 自身の高さを算出する。 TODO: ???
         const h = children_h===0 ? this.style.h : this.childrenH(children) + (this.style.padding * 2 || 0);
 
         this.size({ w: 888, h: h });

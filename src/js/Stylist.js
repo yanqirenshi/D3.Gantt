@@ -75,17 +75,23 @@ export default class Stylist {
         let before = null;
         for (const wbs_data of data.wbs) {
             const children = index[wbs_data.id] || [];
+
+            // WBS のクラスを生成する。
             const wbs = new Classes.Wbs(wbs_data, style.body.row);
 
+            // 同じ階層のWBSは並べる。
             if (before)
                 wbs.location({
                     y: before.location().y + before.size().h,
                 });
 
+            // WBS の位置/サイズを決める。children から。
             wbs.styling(children);
 
+            // 同じ階層の次のWBSのために今回のWBSをキープする。
             before = wbs;
 
+            // アウトプットに出力する。
             pool.list.push(wbs);
             pool.ht[wbs.id] = wbs;
         }
