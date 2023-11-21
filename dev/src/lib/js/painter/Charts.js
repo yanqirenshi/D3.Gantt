@@ -28,15 +28,16 @@ export default class Charts {
             .attr("font-size", d=> fontSize(d))
             .text(d=> d.core.name);
     }
-    drawResult (rects) {
-        rects
-            .attr("x", d=> d._result.location.x)
-            .attr("y", d=> d._result.location.y)
-            .attr("width", d=>  d._result.size.w)
-            .attr("height", d=> d._result.size.h)
-            .attr("rx", d=> d._result.size.h/2)
-            .attr("ry", d=> d._result.size.h/2)
-            .attr("fill", d=> d.style.result.background);
+    fillColor (d, type) {
+        const core_style = d.core.style;
+        const style = d.style;
+
+        if (core_style &&
+            core_style[type] &&
+            core_style[type].background)
+            return core_style[type].background;
+
+        return style[type].background;
     }
     drawPlan (rects) {
         rects
@@ -46,12 +47,17 @@ export default class Charts {
             .attr("height", d=> d._plan.size.h)
             .attr("rx", d=> d._plan.size.h/2)
             .attr("ry", d=> d._plan.size.h/2)
-            .attr("fill", d=> {
-                if (d.core.style && d.core.style.background)
-                    return d.core.style.background;
-
-                return d.style.plan.background;
-            });
+            .attr("fill", d=> this.fillColor(d, 'plan'));
+    }
+    drawResult (rects) {
+        rects
+            .attr("x", d=> d._result.location.x)
+            .attr("y", d=> d._result.location.y)
+            .attr("width", d=>  d._result.size.w)
+            .attr("height", d=> d._result.size.h)
+            .attr("rx", d=> d._result.size.h/2)
+            .attr("ry", d=> d._result.size.h/2)
+            .attr("fill", d=> this.fillColor(d, 'result'));
     }
     drawProgress (rects) {
         rects
@@ -63,7 +69,7 @@ export default class Charts {
             .attr("height", d=> d._progress.size.h)
             .attr("rx", d=> d._progress.size.h/2)
             .attr("ry", d=> d._progress.size.h/2)
-            .attr("fill", d=> d.style.progress.background);
+            .attr("fill", d=> this.fillColor(d, 'progress'));
     }
     draw (place, data) {
         const selection = place

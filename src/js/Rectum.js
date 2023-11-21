@@ -204,9 +204,9 @@ export default class Rectum extends Colon {
         this.drawBodyGrid(place, data);
         this.drawHeadGrit(place, data);
 
-        this.drawNow(place, data);
-
         new Painter.Charts().draw(place, data);
+
+        this.drawNow(place, data);
     }
     styling (data) {
         return this.stylist.styling(data);

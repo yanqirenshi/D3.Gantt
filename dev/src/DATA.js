@@ -33,7 +33,12 @@ function workpackages () {
             name: 'Task 1000',
             plan: term('2023-09-01', '2024-09-30'),
             result: term('2023-09-01', '2024-09-30'),
-            style: { background: '#c1e4e9' },
+            progress: 50,
+            style: {
+                plan: { background: '#89c3eb'},
+                result: { background: '#eaf4fc'},
+                progress: {background: '#a0d8ef'},
+            },
         },
         {
             id: 1001,

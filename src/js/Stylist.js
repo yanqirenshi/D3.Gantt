@@ -75,23 +75,17 @@ export default class Stylist {
         let before = null;
         for (const wbs_data of data.wbs) {
             const children = index[wbs_data.id] || [];
-
-            // WBS のクラスを生成する。
             const wbs = new Classes.Wbs(wbs_data, style.body.row);
 
-            // 同じ階層のWBSは並べる。
             if (before)
                 wbs.location({
                     y: before.location().y + before.size().h,
                 });
 
-            // WBS の位置/サイズを決める。children から。
             wbs.styling(children);
 
-            // 同じ階層の次のWBSのために今回のWBSをキープする。
             before = wbs;
 
-            // アウトプットに出力する。
             pool.list.push(wbs);
             pool.ht[wbs.id] = wbs;
         }
@@ -293,7 +287,7 @@ export default class Stylist {
                 size: { w: 0, h: h },
                 stroke: {
                     color: '#666666',
-                    width: '1',
+                    width: '3',
                     dasharray: null,
                 },
             };
@@ -333,6 +327,35 @@ export default class Stylist {
                     cells.push(obj);
 
                 week_start.add(1, 'w');
+            }
+        }
+
+        // 日次の線を追加
+        if (cycle==='d') {
+            const day_start = moment(term.start);
+
+            day_start.add(1, 'd');
+
+            while (day_start.isBefore(end)) {
+                let x_start = scale(day_start.toDate());
+
+                const obj = {
+                    location: {
+                        x: x_start,
+                        y: style.stage.padding,
+                    },
+                    size: { w: 0, h: h },
+                    stroke: {
+                        color: '#999999',
+                        width: day_start.day()===1 ? 2 : 1,
+                        dasharray: 3,
+                    },
+                };
+
+                if (obj.location.x>0)
+                    cells.push(obj);
+
+                day_start.add(1, 'd');
             }
         }
 
@@ -382,18 +405,23 @@ export default class Stylist {
 
         models.timescale = this.makeHeaderCells(style, models);
 
+        // まず Workpackage をスタイリング
         const ret = this.stylingWorkpackages(style, models.scale, data);
         models.workpackages = ret.pool;
         models.indexWpKeyParent = ret.index;
 
+        // 次に Wbs をスタイリング
         models.wbs = this.stylingWBS(style, data, models.indexWpKeyParent);
 
+        // その後 Heac, Body, Foot をスタイリング
         models.head = this.stylingHead(style, models);
         models.body = this.stylingBody(style, models);
         models.foot = this.stylingFoot(style, models);
 
+        // 日別線を描画
         models.grid = this.makeGrid(data.scale.cycle, style, models);
 
+        // 当日線を描画
         models.now = this.makeNow (style, models);
 
         this.stylingStage(models);
