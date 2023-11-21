@@ -12,6 +12,8 @@ const rectum = new Rectum({
 });
 
 export default function Output (props) {
+    const source = props.source;
+
     const [unit, setUnit] = React.useState('w');
     const [filter, setFilter] = React.useState({
         status: {
@@ -22,7 +24,7 @@ export default function Output (props) {
     const [data, setData] = React.useState(null);
 
     React.useEffect(()=> {
-        setData(props.source);
+        setData(source);
     }, []);
 
     React.useEffect(()=> {

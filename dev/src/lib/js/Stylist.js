@@ -287,7 +287,7 @@ export default class Stylist {
                 size: { w: 0, h: h },
                 stroke: {
                     color: '#666666',
-                    width: '1',
+                    width: '3',
                     dasharray: null,
                 },
             };
@@ -327,6 +327,35 @@ export default class Stylist {
                     cells.push(obj);
 
                 week_start.add(1, 'w');
+            }
+        }
+
+        // 日次の線を追加
+        if (cycle==='d') {
+            const day_start = moment(term.start);
+
+            day_start.add(1, 'd');
+
+            while (day_start.isBefore(end)) {
+                let x_start = scale(day_start.toDate());
+
+                const obj = {
+                    location: {
+                        x: x_start,
+                        y: style.stage.padding,
+                    },
+                    size: { w: 0, h: h },
+                    stroke: {
+                        color: '#999999',
+                        width: day_start.day()===1 ? 2 : 1,
+                        dasharray: 3,
+                    },
+                };
+
+                if (obj.location.x>0)
+                    cells.push(obj);
+
+                day_start.add(1, 'd');
             }
         }
 
