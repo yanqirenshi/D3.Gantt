@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default class Charts {
     drawTextsWithLink (mode, anchers) {
         anchers
@@ -26,7 +28,12 @@ export default class Charts {
         // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
             .attr("font-family", "Verdana")
             .attr("font-size", d=> fontSize(d))
-            .text(d=> d.core.name);
+            .text(d=> {
+                const s = moment(d.plan().start).format('MM-DD');
+                const e = moment(d.plan().end).format('MM-DD');
+
+                return `${d.core.name},　${s} 〜 ${e}`;
+            });
     }
     fillColor (d, type) {
         const core_style = d.core.style;

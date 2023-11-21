@@ -48,6 +48,9 @@ export default class Workpackage extends Element {
     url () {
         return this.core.url || null;
     }
+    plan () {
+        return this.core.plan || null;
+    }
     stylingLabel () {
         const style = this.style;
 

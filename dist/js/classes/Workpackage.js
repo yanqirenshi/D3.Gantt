@@ -83,6 +83,11 @@ var Workpackage = /*#__PURE__*/function (_Element) {
       return this.core.url || null;
     }
   }, {
+    key: "plan",
+    value: function plan() {
+      return this.core.plan || null;
+    }
+  }, {
     key: "stylingLabel",
     value: function stylingLabel() {
       var style = this.style;

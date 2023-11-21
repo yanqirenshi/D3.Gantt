@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+var _moment = _interopRequireDefault(require("moment"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -40,7 +42,9 @@ var Charts = /*#__PURE__*/function () {
       .attr("font-family", "Verdana").attr("font-size", function (d) {
         return fontSize(d);
       }).text(function (d) {
-        return d.core.name;
+        var s = (0, _moment["default"])(d.plan().start).format('MM-DD');
+        var e = (0, _moment["default"])(d.plan().end).format('MM-DD');
+        return "".concat(d.core.name, ",\u3000").concat(s, " \u301C ").concat(e);
       });
     }
   }, {
