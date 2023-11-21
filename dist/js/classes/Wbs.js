@@ -34,11 +34,12 @@ var Wbs = /*#__PURE__*/function (_Element) {
     value: function padding() {
       return this.style.padding || 0;
     }
+    /**
+     * 矩形が被るものがないか確認する。 被る=true, 被らない=false
+     */
   }, {
-    key: "layoutChildrenAddTemp",
-    value: function layoutChildrenAddTemp(wp, tmp) {
-      // 矩形が被るものがないか確認する。 被る=true, 被らない=false
-      // const isPuton = (targets) => {
+    key: "isPuton",
+    value: function isPuton(targets) {
       //     for (const target of targets) {
       //         const wp_l = wp.location();
       //         const wp_s = wp.size();
@@ -51,8 +52,16 @@ var Wbs = /*#__PURE__*/function (_Element) {
       //     }
 
       //     return false;
-      // };
+
       // TODO: 仮設
+      return true;
+    }
+    /**
+     * Workpackage のチャートが被るかどうかを整える。(2/2)
+     */
+  }, {
+    key: "layoutChildrenAddTemp",
+    value: function layoutChildrenAddTemp(wp, tmp) {
       var isPuton = function isPuton(targets) {
         return true;
       };
@@ -61,7 +70,10 @@ var Wbs = /*#__PURE__*/function (_Element) {
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var wp_list = _step.value;
-          if (isPuton(wp_list)) continue;
+          // wp が 他 wp と被る場合、別の段での表示にする。
+          if (this.isPuton(wp_list)) continue;
+
+          // wp が 他 wp と被らない場合、同じ段での表示にする。
           wp_list.push(wp);
           return;
         }
@@ -72,6 +84,9 @@ var Wbs = /*#__PURE__*/function (_Element) {
       }
       tmp.push([wp]);
     }
+    /**
+     * Workpackage のチャートが被るかどうかを整える。(1/2)
+     */
   }, {
     key: "layoutChildrenMakeTmp",
     value: function layoutChildrenMakeTmp(children) {
@@ -96,7 +111,11 @@ var Wbs = /*#__PURE__*/function (_Element) {
         if (h > ht.h) ht.h = h;
         return ht;
       };
+
+      // Workpackage のチャートが被るかどうかを整える。
       var tmp = this.layoutChildrenMakeTmp(children);
+
+      // TODO: 現在は Workpackage のみを children の対象としている。
       var before = null;
       var _iterator2 = _createForOfIteratorHelper(tmp),
         _step2;
@@ -154,12 +173,21 @@ var Wbs = /*#__PURE__*/function (_Element) {
       }
       return h;
     }
+    /** ****************************************************************
+     * @children List: Wbs, Workpackage
+     * **************************************************************** */
   }, {
     key: "styling",
     value: function styling(children) {
       this.layoutChildren(children);
+
+      // TODO: 一度計算する?
       this.childrenH(children);
+
+      // TODO: 再度計算する?
       var children_h = this.childrenH(children);
+
+      // TODO: 再々度計算する?
       var h = children_h === 0 ? this.style.h : this.childrenH(children) + (this.style.padding * 2 || 0);
       this.size({
         w: 888,

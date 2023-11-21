@@ -249,8 +249,8 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       this.drawRows(place, data);
       this.drawBodyGrid(place, data);
       this.drawHeadGrit(place, data);
-      this.drawNow(place, data);
       new Painter.Charts().draw(place, data);
+      this.drawNow(place, data);
     }
   }, {
     key: "styling",

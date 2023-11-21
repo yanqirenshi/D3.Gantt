@@ -344,7 +344,7 @@ var Stylist = /*#__PURE__*/function () {
           },
           stroke: {
             color: '#666666',
-            width: '1',
+            width: '3',
             dasharray: null
           }
         };
@@ -377,6 +377,32 @@ var Stylist = /*#__PURE__*/function () {
           };
           if (_obj.location.x > 0) cells.push(_obj);
           week_start.add(1, 'w');
+        }
+      }
+
+      // 日次の線を追加
+      if (cycle === 'd') {
+        var day_start = (0, _moment["default"])(term.start);
+        day_start.add(1, 'd');
+        while (day_start.isBefore(end)) {
+          var _x_start2 = scale(day_start.toDate());
+          var _obj2 = {
+            location: {
+              x: _x_start2,
+              y: style.stage.padding
+            },
+            size: {
+              w: 0,
+              h: h
+            },
+            stroke: {
+              color: '#999999',
+              width: day_start.day() === 1 ? 2 : 1,
+              dasharray: 3
+            }
+          };
+          if (_obj2.location.x > 0) cells.push(_obj2);
+          day_start.add(1, 'd');
         }
       }
       return cells;
@@ -419,14 +445,24 @@ var Stylist = /*#__PURE__*/function () {
       models.stage = this.makeStage(data, term, style);
       models.scale = this.makeScale(models.stage, models.term);
       models.timescale = this.makeHeaderCells(style, models);
+
+      // まず Workpackage をスタイリング
       var ret = this.stylingWorkpackages(style, models.scale, data);
       models.workpackages = ret.pool;
       models.indexWpKeyParent = ret.index;
+
+      // 次に Wbs をスタイリング
       models.wbs = this.stylingWBS(style, data, models.indexWpKeyParent);
+
+      // その後 Heac, Body, Foot をスタイリング
       models.head = this.stylingHead(style, models);
       models.body = this.stylingBody(style, models);
       models.foot = this.stylingFoot(style, models);
+
+      // 日別線を描画
       models.grid = this.makeGrid(data.scale.cycle, style, models);
+
+      // 当日線を描画
       models.now = this.makeNow(style, models);
       this.stylingStage(models);
       return models;

@@ -44,27 +44,17 @@ var Charts = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "drawResult",
-    value: function drawResult(rects) {
-      rects.attr("x", function (d) {
-        return d._result.location.x;
-      }).attr("y", function (d) {
-        return d._result.location.y;
-      }).attr("width", function (d) {
-        return d._result.size.w;
-      }).attr("height", function (d) {
-        return d._result.size.h;
-      }).attr("rx", function (d) {
-        return d._result.size.h / 2;
-      }).attr("ry", function (d) {
-        return d._result.size.h / 2;
-      }).attr("fill", function (d) {
-        return d.style.result.background;
-      });
+    key: "fillColor",
+    value: function fillColor(d, type) {
+      var core_style = d.core.style;
+      var style = d.style;
+      if (core_style && core_style[type] && core_style[type].background) return core_style[type].background;
+      return style[type].background;
     }
   }, {
     key: "drawPlan",
     value: function drawPlan(rects) {
+      var _this = this;
       rects.attr("x", function (d) {
         return d._plan.location.x;
       }).attr("y", function (d) {
@@ -78,13 +68,33 @@ var Charts = /*#__PURE__*/function () {
       }).attr("ry", function (d) {
         return d._plan.size.h / 2;
       }).attr("fill", function (d) {
-        if (d.core.style && d.core.style.background) return d.core.style.background;
-        return d.style.plan.background;
+        return _this.fillColor(d, 'plan');
+      });
+    }
+  }, {
+    key: "drawResult",
+    value: function drawResult(rects) {
+      var _this2 = this;
+      rects.attr("x", function (d) {
+        return d._result.location.x;
+      }).attr("y", function (d) {
+        return d._result.location.y;
+      }).attr("width", function (d) {
+        return d._result.size.w;
+      }).attr("height", function (d) {
+        return d._result.size.h;
+      }).attr("rx", function (d) {
+        return d._result.size.h / 2;
+      }).attr("ry", function (d) {
+        return d._result.size.h / 2;
+      }).attr("fill", function (d) {
+        return _this2.fillColor(d, 'result');
       });
     }
   }, {
     key: "drawProgress",
     value: function drawProgress(rects) {
+      var _this3 = this;
       rects.attr("x", function (d) {
         return d._progress.location.x;
       }).attr("y", function (d) {
@@ -98,7 +108,7 @@ var Charts = /*#__PURE__*/function () {
       }).attr("ry", function (d) {
         return d._progress.size.h / 2;
       }).attr("fill", function (d) {
-        return d.style.progress.background;
+        return _this3.fillColor(d, 'progress');
       });
     }
   }, {
