@@ -1,6 +1,9 @@
 import Element from './Element.js';
 
 export default class Wbs extends Element {
+    name () {
+        return this.core.name;
+    }
     padding () {
         return this.style.padding || 0;
     }
@@ -61,7 +64,7 @@ export default class Wbs extends Element {
 
         return children.reduce(func, []);
     }
-    layoutChildren (children) {
+    layoutChildren (title_h, children) {
         const cal = (ht, wp) => {
             const y = wp.location().y;
             const h = wp.size().h;
@@ -73,18 +76,27 @@ export default class Wbs extends Element {
         };
 
         // Workpackage のチャートが被るかどうかを整える。
-        const tmp = this.layoutChildrenMakeTmp(children);
+        const rows = this.layoutChildrenMakeTmp(children);
 
         // TODO: 現在は Workpackage のみを children の対象としている。
         let before = null;
-        for(const wp_list of tmp) {
+        for(const wp_list of rows) {
+            // 最初の wp の場合、なにかする。
             if (!before) {
-                before = wp_list.reduce(cal, { y:-1, h:-1 });
+                before = wp_list.reduce(cal, { y: title_h, h:-1 });
+
+            for (const wp of wp_list)
+                wp.location({
+                    y: title_h
+                });
+
                 continue;
             }
 
             for (const wp of wp_list)
-                wp.location({y: before.y + before.h + 11});
+                wp.location({
+                    y: before.y + before.h + 11
+                });
 
             before = wp_list.reduce(cal, { y:-1, h:-1 });
         }
@@ -114,14 +126,16 @@ export default class Wbs extends Element {
      * @children List: Wbs, Workpackage
      * **************************************************************** */
     styling (children) {
-        this.layoutChildren(children);
+        const title_h = 88;
+
+        this.layoutChildren(title_h, children);
 
         const rect = this.childrenRect(children);
         const padding = this.style.padding;
 
         const h = rect.h===0
               ? this.style.h
-              : rect.h + (padding * 2 || 0);
+              : rect.h + (padding * 2 || 0) + title_h;
 
         this.size({ w: rect.w + padding * 4, h: h });
 
