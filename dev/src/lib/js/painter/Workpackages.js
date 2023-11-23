@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export default class Charts {
+export default class Workpackages {
     drawTextsWithLink (mode, anchers) {
         anchers
             .attr("href", d=> d.url())
@@ -32,7 +32,7 @@ export default class Charts {
                 const s = moment(d.plan().start).format('MM-DD');
                 const e = moment(d.plan().end).format('MM-DD');
 
-                return `${d.core.name},　${s} 〜 ${e}`;
+                return `${d.core.name},　${s} 〜 ${e},　${d.core.id}`;
             });
     }
     fillColor (d, type) {

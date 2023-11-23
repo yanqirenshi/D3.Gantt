@@ -1,5 +1,8 @@
-import Charts from './Charts.js';
+import Workpackages from './Workpackages.js';
+import Wbs from './Wbs.js';
+
 
 export {
-    Charts,
+    Wbs,
+    Workpackages,
 }

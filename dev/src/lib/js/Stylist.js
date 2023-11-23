@@ -72,6 +72,9 @@ export default class Stylist {
     stylingWBS (style, data, index) {
         const pool = this.makePool();
 
+        // TODO: move to style
+        const margin_top = 33;
+
         let before = null;
         for (const wbs_data of data.wbs) {
             const children = index[wbs_data.id] || [];
@@ -79,7 +82,11 @@ export default class Stylist {
 
             if (before)
                 wbs.location({
-                    y: before.location().y + before.size().h,
+                    y: before.location().y + before.size().h + margin_top,
+                });
+            else
+                wbs.location({
+                    y: data.style.head.h + margin_top
                 });
 
             wbs.styling(children);
@@ -119,15 +126,15 @@ export default class Stylist {
 
             if (h < l.y + s.h)
                 h = l.y + s.h;
+            // console.log(l);
+            // wbs.location({
+            //     x: l.x + location.x,
+            //     y: l.y + location.y,
+            // });
 
-            wbs.location({
-                x: l.x + location.x,
-                y: l.y + location.y,
-            });
-
-            wbs.size({
-                w: size.w,
-            });
+            // wbs.size({
+            //     w: size.w,
+            // });
         };
 
         size.h = h;
