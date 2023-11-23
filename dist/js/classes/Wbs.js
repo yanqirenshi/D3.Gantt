@@ -30,6 +30,11 @@ var Wbs = /*#__PURE__*/function (_Element) {
     return _super.apply(this, arguments);
   }
   _createClass(Wbs, [{
+    key: "name",
+    value: function name() {
+      return this.core.name;
+    }
+  }, {
     key: "padding",
     value: function padding() {
       return this.style.padding || 0;
@@ -103,7 +108,7 @@ var Wbs = /*#__PURE__*/function (_Element) {
     }
   }, {
     key: "layoutChildren",
-    value: function layoutChildren(children) {
+    value: function layoutChildren(title_h, children) {
       var cal = function cal(ht, wp) {
         var y = wp.location().y;
         var h = wp.size().h;
@@ -113,35 +118,50 @@ var Wbs = /*#__PURE__*/function (_Element) {
       };
 
       // Workpackage のチャートが被るかどうかを整える。
-      var tmp = this.layoutChildrenMakeTmp(children);
+      var rows = this.layoutChildrenMakeTmp(children);
 
       // TODO: 現在は Workpackage のみを children の対象としている。
       var before = null;
-      var _iterator2 = _createForOfIteratorHelper(tmp),
+      var _iterator2 = _createForOfIteratorHelper(rows),
         _step2;
       try {
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var wp_list = _step2.value;
+          // 最初の wp の場合、なにかする。
           if (!before) {
             before = wp_list.reduce(cal, {
-              y: -1,
+              y: title_h,
               h: -1
             });
+            var _iterator3 = _createForOfIteratorHelper(wp_list),
+              _step3;
+            try {
+              for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                var wp = _step3.value;
+                wp.location({
+                  y: title_h
+                });
+              }
+            } catch (err) {
+              _iterator3.e(err);
+            } finally {
+              _iterator3.f();
+            }
             continue;
           }
-          var _iterator3 = _createForOfIteratorHelper(wp_list),
-            _step3;
+          var _iterator4 = _createForOfIteratorHelper(wp_list),
+            _step4;
           try {
-            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-              var wp = _step3.value;
-              wp.location({
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+              var _wp = _step4.value;
+              _wp.location({
                 y: before.y + before.h + 11
               });
             }
           } catch (err) {
-            _iterator3.e(err);
+            _iterator4.e(err);
           } finally {
-            _iterator3.f();
+            _iterator4.f();
           }
           before = wp_list.reduce(cal, {
             y: -1,
@@ -155,23 +175,31 @@ var Wbs = /*#__PURE__*/function (_Element) {
       }
     }
   }, {
-    key: "childrenH",
-    value: function childrenH(children) {
+    key: "childrenRect",
+    value: function childrenRect(children) {
       var h = 0;
-      var _iterator4 = _createForOfIteratorHelper(children),
-        _step4;
+      var x_min = null;
+      var x_max = null;
+      var _iterator5 = _createForOfIteratorHelper(children),
+        _step5;
       try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var child = _step4.value;
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var child = _step5.value;
           var child_h = child.location().y + child.size().h;
           if (h < child_h) h = child_h;
+          if (x_min === null || x_min > child.location().x) x_min = child.location().x;
+          if (x_max === null || x_max < child.location().x + child.size().w) x_max = child.location().x + child.size().w;
         }
       } catch (err) {
-        _iterator4.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator4.f();
+        _iterator5.f();
       }
-      return h;
+      return {
+        x: x_min,
+        w: x_max - x_min,
+        h: h
+      };
     }
     /** ****************************************************************
      * @children List: Wbs, Workpackage
@@ -179,19 +207,21 @@ var Wbs = /*#__PURE__*/function (_Element) {
   }, {
     key: "styling",
     value: function styling(children) {
-      this.layoutChildren(children);
-
-      // TODO: 一度計算する?
-      this.childrenH(children);
-
-      // TODO: 再度計算する?
-      var children_h = this.childrenH(children);
-
-      // TODO: 再々度計算する?
-      var h = children_h === 0 ? this.style.h : this.childrenH(children) + (this.style.padding * 2 || 0);
+      var title_h = 88;
+      this.layoutChildren(title_h, children);
+      var rect = this.childrenRect(children);
+      var padding = this.style.padding;
+      var h = rect.h === 0 ? this.style.h : rect.h + (padding * 2 || 0) + title_h;
       this.size({
-        w: 888,
+        w: rect.w + padding * 4,
         h: h
+      });
+
+      // TODO: this.layoutChildren でやるべき？
+      var l = this.location();
+      this.location({
+        x: rect.x - padding * 2,
+        y: l.y
       });
       return this;
     }

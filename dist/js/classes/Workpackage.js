@@ -148,16 +148,20 @@ var Workpackage = /*#__PURE__*/function (_Element) {
       if (!term) return result();
       var start = term.start;
       var end = term.end;
+      var calEnd = function calEnd(end) {
+        if (!end) (0, _moment["default"])().toDate();
+        return scale((0, _moment["default"])(end).add(1, 'd').add(-20, 'h').toDate());
+      };
       if (type === 'plan') {
         if (!start || !end) return result();
         x = scale(start);
-        w = scale(end) - x;
+        w = calEnd(end) - x;
         h = style[type].h;
       } else {
         if (!start) return result();
         x = scale(start);
         y = style[type].shift || 0;
-        w = scale(end || (0, _moment["default"])()) - x;
+        w = calEnd(end) - x;
         h = style[type].h;
       }
       return result();

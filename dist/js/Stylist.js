@@ -105,6 +105,9 @@ var Stylist = /*#__PURE__*/function () {
     key: "stylingWBS",
     value: function stylingWBS(style, data, index) {
       var pool = this.makePool();
+
+      // TODO: move to style
+      var margin_top = 33;
       var before = null;
       var _iterator2 = _createForOfIteratorHelper(data.wbs),
         _step2;
@@ -114,7 +117,9 @@ var Stylist = /*#__PURE__*/function () {
           var children = index[wbs_data.id] || [];
           var wbs = new Classes.Wbs(wbs_data, style.body.row);
           if (before) wbs.location({
-            y: before.location().y + before.size().h
+            y: before.location().y + before.size().h + margin_top
+          });else wbs.location({
+            y: data.style.head.h + margin_top
           });
           wbs.styling(children);
           before = wbs;
@@ -163,13 +168,15 @@ var Stylist = /*#__PURE__*/function () {
           var l = wbs.location();
           var s = wbs.size();
           if (h < l.y + s.h) h = l.y + s.h;
-          wbs.location({
-            x: l.x + location.x,
-            y: l.y + location.y
-          });
-          wbs.size({
-            w: size.w
-          });
+          // console.log(l);
+          // wbs.location({
+          //     x: l.x + location.x,
+          //     y: l.y + location.y,
+          // });
+
+          // wbs.size({
+          //     w: size.w,
+          // });
         }
       } catch (err) {
         _iterator3.e(err);

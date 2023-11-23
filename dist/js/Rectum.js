@@ -249,7 +249,10 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       this.drawRows(place, data);
       this.drawBodyGrid(place, data);
       this.drawHeadGrit(place, data);
-      new Painter.Charts().draw(place, data);
+
+      // chart を描画する。
+      new Painter.Wbs().draw(place, data);
+      new Painter.Workpackages().draw(place, data);
       this.drawNow(place, data);
     }
   }, {
