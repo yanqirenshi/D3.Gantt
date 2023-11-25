@@ -213,4 +213,13 @@ export default class Rectum extends Colon {
     styling (data) {
         return this.stylist.styling(data);
     }
+    /* ******** */
+    /*  Data    */
+    /* ******** */
+    data (data) {
+        if (arguments.length===0)
+            return super.data();
+
+        return super.data(this.styling(data));
+    }
 }
