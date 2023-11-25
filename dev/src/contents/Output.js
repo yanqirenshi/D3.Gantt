@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import D3Gantt, {Rectum} from '../lib/index.js';
-import OutputController from './OutputController.js';
+import OutputController from './Output/OutputController.js';
+import Graph from './Output/Graph.js';
 
 const rectum = new Rectum({
     transform:  {
@@ -21,32 +22,11 @@ export default function Output (props) {
             close: true,
         }
     });
-    const [data, setData] = React.useState(null);
-
-    React.useEffect(()=> {
-        setData(source);
-    }, []);
-
-    React.useEffect(()=> {
-        if (!data)
-            return;
-        rectum.data(rectum.styling(data));
-    }, [data]);
-
-    React.useEffect(()=> {
-        if (!data) return;
-
-        const new_data = {...data};
-
-        new_data.scale.cycle = unit;
-
-        setData(new_data);
-    }, [unit]);
 
     const changeUnit = (e)=> setUnit(e.target.value);
     const changeFilter = (new_filter)=> setFilter(new_filter);
 
-    if (!data)
+    if (!source)
         return null;
 
     return (
@@ -55,9 +35,7 @@ export default function Output (props) {
           <OutputController unit={unit} changeUnit={changeUnit}
                             filter={filter} changeFilter={changeFilter}/>
 
-          <div style={{height:'100%'}}>
-            <D3Gantt rectum={rectum}/>
-          </div>
+          <Graph data={source}/>
         </div>
     );
 }
