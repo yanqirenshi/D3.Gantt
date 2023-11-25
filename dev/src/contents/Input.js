@@ -43,7 +43,8 @@ function Input () {
               <ul>
                   {tabs.list.map(tab=> {
                       return (
-                          <li className={tabs.selected===tab.code ? "is-active" : null}
+                          <li key={tab.code}
+                              className={tabs.selected===tab.code ? "is-active" : null}
                               code={tab.code}
                               onClick={click}>
                             <a code={tab.code}>
