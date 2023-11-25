@@ -13,9 +13,7 @@ const rectum = new Rectum({
 export default function Graph (props) {
     const data = props.data;
 
-    React.useEffect(()=> {
-        rectum.data(rectum.styling(data));
-    }, [data]);
+    React.useEffect(()=> rectum.data(data), [data]);
 
     return (
         <div style={{height:'100%'}}>
