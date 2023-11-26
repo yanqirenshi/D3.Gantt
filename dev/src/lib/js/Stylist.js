@@ -383,7 +383,7 @@ export default class Stylist {
             y2: y + h,
         };
     }
-    styling (data, children) {
+    styling (data) {
         const style = data.style;
 
         const models = {
@@ -434,5 +434,76 @@ export default class Stylist {
         this.stylingStage(models);
 
         return models;
+    }
+    stylingNew (data) {
+        const style = data.style;
+
+        const term = this.getTerm(data);
+        const stage = this.makeStage(data, term, style);
+        const scale = this.makeScale(stage, term);
+
+        // const {roots, wbs, wps} = this.buildWbs(data.wbs, data.workpackages, style);
+        const {roots, wbs_list, wp_list} = this.buildWbs(data.wbs, data.workpackages, style);
+
+        // scale で wp の横位置(x), 幅(width), 高さ(height) を決める。 y は後で決める。
+        for (const wp of wp_list)
+            wp.styling(scale);
+
+        // children が全部 wp のものは 横位置(x), 幅(width), 高さ(height) を決める。
+        for (const wbs of wbs_list)
+            if (wbs.isAllWp())
+                wbs.stylingNew();
+
+        // 最後に root から 整える。
+        for (const root of roots)
+            root.stylingNew();
+
+        console.log(roots);
+    }
+    /* ********** */
+    /*  Wbs Tree  */
+    /* ********** */
+    makeWbsNode (data, fn) {
+        return data.reduce((ht,d)=> {
+            const obj = fn(d);
+            ht[obj.id] = obj;
+            return ht;
+        }, {});
+    }
+    buildWbs (wbs, wps, style) {
+        // data で Wbs, Workpackage クラスインスタンスを生成する。
+        const wbs_ht = this.makeWbsNode(wbs, d=> new Classes.Wbs(d, style));
+        const wp_ht  = this.makeWbsNode(wps, d=> new Classes.Workpackage(d, style.body.chart));
+
+        const wbs_list = Object.values(wbs_ht);
+        const wp_list  = Object.values(wp_ht);
+
+        // WBS のルートのリストを取得する。 WBS階層を作りながら。
+        const roots = wbs_list.reduce((list,wbs)=> {
+            const parent_id = wbs.parentId();
+            if (!parent_id) {
+                list.push(wbs);
+                return list;
+            }
+
+            const parent = wbs_ht[parent_id];
+
+            parent.addChild(wbs);
+
+            return list;
+        }, []);
+
+        // WBS のルートのリストを取得する。 WBS階層を作りながら。
+        for (const wp of wp_list) {
+            const parent = wbs_ht[wp.parentId()];
+
+            parent.addChild(wp);
+        }
+
+        return {
+            roots: roots,
+            wbs_list: wbs_list,
+            wp_list: wp_list,
+        };
     }
 }

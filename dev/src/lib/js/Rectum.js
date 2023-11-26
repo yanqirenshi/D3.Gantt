@@ -1,5 +1,7 @@
 import {Colon} from '@yanqirenshi/assh0le';
 
+import * as c from './Classes.js';
+
 import Stylist from './Stylist.js';
 
 import * as Painter from './painter/index.js';
@@ -221,6 +223,8 @@ export default class Rectum extends Colon {
         this.drawNow(place, data);
     }
     styling (data) {
+        this.stylist.stylingNew(data);
+
         return this.stylist.styling(data);
     }
     /* ******** */

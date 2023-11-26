@@ -1,8 +1,32 @@
-import Element from './Element.js';
+import WbsNode from './WbsNode.js';
 
-export default class Wbs extends Element {
-    name () {
-        return this.core.name;
+export default class Wbs extends WbsNode {
+    constructor (data, style) {
+        super(data, style);
+        this._children = {
+            ht:{},
+            list:[],
+        };
+    }
+    /**
+     */
+    addChild (child) {
+        if (!child)
+            return;
+
+        const children = this.children();
+
+        children.ht[child.id] = child;
+        children.list.push(child);
+    }
+    children (format) {
+        if ('ht'===format)
+            return this._children.ht;
+
+        if ('list'===format)
+            return this._children.list;
+
+        return this._children;
     }
     padding () {
         return this.style.padding || 0;
@@ -144,5 +168,36 @@ export default class Wbs extends Element {
         this.location({x: rect.x - padding * 2, y: l.y});
 
         return this;
+    }
+    stylingNew () {
+        const children = this.children('list');
+
+        const title_h = 88;
+
+        this.layoutChildren(title_h, children);
+
+        const rect = this.childrenRect(children);
+        const padding = this.style.padding;
+
+        const h = rect.h===0
+              ? this.style.h
+              : rect.h + (padding * 2 || 0) + title_h;
+
+        this.size({ w: rect.w + padding * 4, h: h });
+
+        // TODO: this.layoutChildren でやるべき？
+        const l = this.location();
+        this.location({x: rect.x - padding * 2, y: l.y});
+
+        return this;
+    }
+    isAllWp () {
+        const children = this.children('list');
+
+        for (const child of children)
+            if ('Wbs'===child.constructor.name)
+                return false;
+
+        return true;
     }
 };

@@ -1,7 +1,8 @@
-import Element from './Element.js';
 import moment from 'moment';
 
-export default class Workpackage extends Element {
+import WbsNode from './WbsNode.js';
+
+export default class Workpackage extends WbsNode {
     constructor (data, style) {
         super(data, style);
 
@@ -41,9 +42,6 @@ export default class Workpackage extends Element {
         this._progress.location = addVec(this._progress.location, vec);
 
         return this._location;
-    }
-    parentId () {
-        return this.core.parent || null;
     }
     url () {
         return this.core.url || null;
