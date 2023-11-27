@@ -44,7 +44,7 @@ var Workpackages = /*#__PURE__*/function () {
       }).text(function (d) {
         var s = (0, _moment["default"])(d.plan().start).format('MM-DD');
         var e = (0, _moment["default"])(d.plan().end).format('MM-DD');
-        return "".concat(d.core.name, ",\u3000").concat(s, " \u301C ").concat(e, ",\u3000").concat(d.core.parent, "%,\u3000").concat(d.core.id);
+        return "".concat(d.core.name, ",\u3000").concat(s, " \u301C ").concat(e, ",\u3000").concat(d.core.progress, "%,\u3000").concat(d.core.id);
       });
     }
   }, {
