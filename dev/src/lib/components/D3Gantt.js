@@ -6,6 +6,6 @@ export default function D3Gantt (props) {
     const rectum = props.rectum;
 
     return (
-        <Asshole id="asshole-graph" rectum={rectum}/>
+        <Asshole id="d3-gantt-graph" rectum={rectum}/>
     );
 }

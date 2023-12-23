@@ -457,8 +457,6 @@ export default class Stylist {
         // 最後に root から 整える。
         for (const root of roots)
             root.stylingNew();
-
-        console.log(roots);
     }
     /* ********** */
     /*  Wbs Tree  */

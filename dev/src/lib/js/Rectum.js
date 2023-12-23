@@ -33,13 +33,16 @@ export default class Rectum extends Colon {
               .selectAll("rect.stage")
               .data([data.stage]);
 
+        // update
         draw(selections);
 
+        // add
         draw(selections
              .enter()
              .append("rect")
              .attr("class", 'stage'));
 
+        // remove
         selections.exit().remove();
     }
     drawHead (place, data) {
