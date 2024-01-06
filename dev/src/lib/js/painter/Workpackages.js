@@ -30,7 +30,7 @@ export default class Workpackages {
                 const s = moment(d.plan().start).format('MM-DD');
                 const e = moment(d.plan().end).format('MM-DD');
 
-                return `${d.core.name},　${s} 〜 ${e},　${d.core.parent}%,　${d.core.id}`;
+                return `${d.core.name},　${s} 〜 ${e},　${d.core.progress}%,　${d.core.id}`;
             });
     }
     fillColor (d, type) {
