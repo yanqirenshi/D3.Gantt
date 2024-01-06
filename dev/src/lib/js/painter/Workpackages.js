@@ -24,8 +24,6 @@ export default class Workpackages {
         return texts
             .attr("x", d=> d._label.location.x)
             .attr("y", d=> d._label.location.y)
-        // .attr("x", d=> d.location().x + (d.style.padding * 3))
-        // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
             .attr("font-family", "Verdana")
             .attr("font-size", d=> fontSize(d))
             .text(d=> {
@@ -83,7 +81,9 @@ export default class Workpackages {
               .selectAll("g.chart")
               .data(data.workpackages.list, (wp)=> wp.id);
 
-        // add
+        /* ****************************************************************
+         *  Add
+         * **************************************************************** */
         const enterd = selection
               .enter()
               .append("g")
@@ -99,8 +99,11 @@ export default class Workpackages {
         this.drawTexts(enterd.filter(isText).append("text").attr("class", 'chart'));
         this.drawTextsWithLink('enter', enterd.filter(isTextWithLink).append("a"));
 
-        // update
+        /* ****************************************************************
+         *  Update
+         * **************************************************************** */
         const workpackages = data.workpackages.list;
+
         this.drawResult(selection.filter(d=> d._result.size.w>0).selectAll("rect.result").data(workpackages, eqWp));
         this.drawPlan(selection.selectAll("rect.chart").data(workpackages, eqWp));
         this.drawProgress(selection.filter(d=> d._progress.size.w>0).selectAll("rect.progress-chart").data(workpackages, eqWp));
@@ -118,7 +121,9 @@ export default class Workpackages {
                 .selectAll("a")
                 .data(workpackages, eqWp));
 
-        // delete
+        /* ****************************************************************
+         *  Delete
+         * **************************************************************** */
         selection.exit().remove();
     }
 }
