@@ -383,10 +383,8 @@ export default class Stylist {
             y2: y + h,
         };
     }
-    styling (data, children) {
-        const style = data.style;
-
-        const models = {
+    initialModels () {
+        return {
             stage: null,
             head: null,
             body: null,
@@ -401,36 +399,53 @@ export default class Stylist {
             scale: null,
             now: null,
         };
+    }
+    styling (data, children) {
+        const models = this.initialModels();
+        const term = this.getTerm(data);
 
-        models.term = this.getTerm(data);
+        models.term = term;
 
-        const term = models.term;
+        const style = data.style;
 
         models.stage = this.makeStage(data, term, style);
-
         models.scale = this.makeScale(models.stage, models.term);
-
         models.timescale = this.makeHeaderCells(style, models);
 
-        // まず Workpackage をスタイリング
+        /* **************************************************************** *
+         *  Workpackages
+         *    ここでは w,h,x を決める。
+         *    y は Wbs の スタイリング時に決める。
+         * **************************************************************** */
         const ret = this.stylingWorkpackages(style, models.scale, data);
         models.workpackages = ret.pool;
         models.indexWpKeyParent = ret.index;
 
-        // 次に Wbs をスタイリング
+        /* **************************************************************** *
+         *  Wbs
+         * **************************************************************** */
         models.wbs = this.stylingWBS(style, data, models.indexWpKeyParent);
 
-        // その後 Heac, Body, Foot をスタイリング
+        /* **************************************************************** *
+         *  Head, Body, Foot
+         * **************************************************************** */
         models.head = this.stylingHead(style, models);
         models.body = this.stylingBody(style, models);
         models.foot = this.stylingFoot(style, models);
 
-        // 日別線を描画
+        /* **************************************************************** *
+         *  日別線
+         * **************************************************************** */
         models.grid = this.makeGrid(data.scale.cycle, style, models);
 
-        // 当日線を描画
+        /* **************************************************************** *
+         *  当日線
+         * **************************************************************** */
         models.now = this.makeNow (style, models);
 
+        /* **************************************************************** *
+         *  Stage
+         * **************************************************************** */
         this.stylingStage(models);
 
         return models;
