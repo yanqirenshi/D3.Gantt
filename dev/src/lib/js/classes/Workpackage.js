@@ -6,6 +6,8 @@ export default class Workpackage extends WbsNode {
     constructor (data, style) {
         super(data, style);
 
+        this.type = "WORKPACKAGE";
+
         const template = () => ({
             size:     { w:0, h:0 },
             location: { x:0, y:0 },

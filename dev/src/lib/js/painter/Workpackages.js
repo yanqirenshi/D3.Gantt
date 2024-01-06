@@ -1,6 +1,22 @@
 import moment from 'moment';
 
+/*
+  +------------------------------------------+
+  | <g class="chart">                        |
+  |                                          |
+  |  +------------------------------------+  |
+  |  | <text class="chart_wbs">           |  |
+  |  |                                    |  |
+  |  +------------------------------------+  |
+  |  +------------------------------------+  |
+  |  | <rect class="chart_wbs">           |  |
+  |  |                                    |  |
+  |  +------------------------------------+  |
+  +------------------------------------------+
+*/
+
 export default class Workpackages {
+    // drow のみメソッド
     drawTextsWithLink (mode, anchers) {
         anchers
             .attr("href", d=> d.url())
@@ -14,6 +30,7 @@ export default class Workpackages {
             this.drawTexts(anchers.select("text"));
 
     }
+    // drow のみメソッド
     drawTexts (texts) {
         const fontSize = (d) => {
             const h = d._label.size.h;
@@ -46,6 +63,7 @@ export default class Workpackages {
 
         return style[type].background;
     }
+    // drow のみメソッド
     drawPlan (rects) {
         rects
             .attr("x", d=> d._plan.location.x)
@@ -56,6 +74,7 @@ export default class Workpackages {
             .attr("ry", d=> d._plan.size.h/2)
             .attr("fill", d=> this.fillColor(d, 'plan'));
     }
+    // drow のみメソッド
     drawResult (rects) {
         rects
             .attr("x", d=> d._result.location.x)
@@ -66,6 +85,7 @@ export default class Workpackages {
             .attr("ry", d=> d._result.size.h/2)
             .attr("fill", d=> this.fillColor(d, 'result'));
     }
+    // drow のみメソッド
     drawProgress (rects) {
         rects
             .attr("x", d=> {
@@ -93,6 +113,7 @@ export default class Workpackages {
         const isTextWithLink = (d)=> d.url() ? true  : false;
         const eqWp = (wp)=> wp.id;
 
+        // add
         this.drawResult(enterd.filter(d=> d._result.size.w>0).append("rect").attr("class", 'result'));
         this.drawPlan(enterd.append("rect").attr("class", 'chart'));
         this.drawProgress(enterd.filter(d=> d._progress.size.w>0).append("rect").attr("class", 'progress-chart'));

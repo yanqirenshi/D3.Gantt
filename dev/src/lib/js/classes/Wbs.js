@@ -3,6 +3,13 @@ import WbsNode from './WbsNode.js';
 export default class Wbs extends WbsNode {
     constructor (data, style) {
         super(data, style);
+
+        this.type = "WBS";
+
+        // タイトル書くところの高さ
+        this.title_h = 166;
+
+        // 子供達の格納場所
         this._children = {
             ht:{},
             list:[],
@@ -52,43 +59,66 @@ export default class Wbs extends WbsNode {
         return true;
     }
     /**
-     * Workpackage のチャートが被るかどうかを整える。(2/2)
+     * すでに配置済みの子供と被るかどうかを判断している。
      */
-    layoutChildrenAddTemp (wp, tmp) {
-        const isPuton = (targets) => true;
+    layoutChildrenAddTemp (wbs_node, rows) {
+        // const isPuton = (targets) => true;
 
-        for (const wp_list of tmp) {
-            // wp が 他 wp と被る場合、別の段での表示にする。
-            if (this.isPuton(wp_list))
-                continue;
+        // for (const row of rows) {
+        //     // wp が 他 wp と被る場合、別の段での表示にする。
+        //     if (this.isPuton(row))
+        //         continue;
 
-            // wp が 他 wp と被らない場合、同じ段での表示にする。
-            wp_list.push(wp);
+        //     // wp が 他 wp と被らない場合、同じ段での表示にする。
+        //     row.push(wbs_node);
 
-            return;
-        }
+        //     return;
+        // }
 
-        tmp.push([wp]);
+        rows.push([wbs_node]);
     }
     /**
-     * Workpackage のチャートが被るかどうかを整える。(1/2)
+     * 子供達を row にまとめる。
      */
-    layoutChildrenMakeTmp (children) {
-        const func = (tmp, child)=>{
+    makeChildrenRows (children) {
+        const func = (list, child)=>{
+            // WBS
+            if (child.type==='WBS')
+                child.stylingNew();
 
-            if (tmp.length===0) {
-                tmp.push([child]);
-                return tmp;
+            // 最初の子供は無条件で追加する。比較対象がないし。
+            if (list.length===0) {
+                list.push([child]);
+                return list;
             }
 
-            this.layoutChildrenAddTemp(child, tmp);
+            // 二番目以降の子供は被るかどうかを確認しながら追加する。
+            this.layoutChildrenAddTemp(child, list);
 
-            return tmp;
+            return list;
         };
 
         return children.reduce(func, []);
     }
+    /** **************************************************************** *
+     * TODO:
+     * ここで高さ計算するのに、WBS はそれが計算されていない。
+     * 事前に高さを計算する必要がある。
+     * その場合、この関数を実行する必要がある。
+     * その場合、WBS が子供にいた場合の計算が入れ子になる。
+     * 出来てそうな気もするが、それを実装する感じか。
+     * **************************************************************** */
     layoutChildren (title_h, children) {
+        // ////////////////////////////////////////////////////////////////
+        // row ごとに 縦(y) 座標 を設定していく。
+        // ////////////////////////////////////////////////////////////////
+        const rows = this.makeChildrenRows(children);
+
+        // ////////////////////////////////////////////////////////////////
+        // row ごとに 縦(y) 座標 を設定していく。
+        // ////////////////////////////////////////////////////////////////
+
+        // 縦(y) 座標 計算用(積み上げ)
         const cal = (ht, wp) => {
             const y = wp.location().y;
             const h = wp.size().h;
@@ -99,30 +129,35 @@ export default class Wbs extends WbsNode {
             return ht;
         };
 
-        // Workpackage のチャートが被るかどうかを整える。
-        const rows = this.layoutChildrenMakeTmp(children);
-
-        // TODO: 現在は Workpackage のみを children の対象としている。
+        // 子供を上から順番に 縦(y) 座標 を設定する。
         let before = null;
-        for(const wp_list of rows) {
-            // 最初の wp の場合、なにかする。
-            if (!before) {
-                before = wp_list.reduce(cal, { y: title_h, h:-1 });
+        for(const row of rows) {
 
-            for (const wp of wp_list)
-                wp.location({
-                    y: title_h
-                });
+            // 最初の子供の配置
+            if (!before) {
+                // if (this.id===90) {
+                //     console.log(this._location);
+                //     console.log(row[0]);
+                // }
+
+                // TODO: WBS の高さは 親の高さをプラスする必要があるな。
+                before = row.reduce(cal, { y: title_h, h:-1 });
+
+                for (const wbs_node of row)
+                    wbs_node.location({
+                        y: title_h + 33
+                    });
+
 
                 continue;
             }
 
-            for (const wp of wp_list)
+            for (const wp of row)
                 wp.location({
                     y: before.y + before.h + 11
                 });
 
-            before = wp_list.reduce(cal, { y:-1, h:-1 });
+            before = row.reduce(cal, { y:-1, h:-1 });
         }
     }
     childrenRect (children) {
@@ -172,22 +207,31 @@ export default class Wbs extends WbsNode {
     stylingNew () {
         const children = this.children('list');
 
-        const title_h = 88;
+        // 子供を配置する。
+        this.layoutChildren(this.title_h, children);
 
-        this.layoutChildren(title_h, children);
-
+        // 子供達を見てサイズ(w,h)を決める。
         const rect = this.childrenRect(children);
-        const padding = this.style.padding;
+
+        // const padding = this.style.padding;
+        const padding = 22;
 
         const h = rect.h===0
-              ? this.style.h
-              : rect.h + (padding * 2 || 0) + title_h;
+              ? this.style.h // ← 子供が無い場合の高さ。
+              : rect.h + (padding * 2 || 0) + this.title_h;
 
-        this.size({ w: rect.w + padding * 4, h: h });
+        this.size({
+            w: rect.w + padding * 4,
+            h: h,
+        });
 
         // TODO: this.layoutChildren でやるべき？
         const l = this.location();
-        this.location({x: rect.x - padding * 2, y: l.y});
+        console.log(l);
+        this.location({
+            x: rect.x - padding * 2,
+            y: l.y,
+        });
 
         return this;
     }

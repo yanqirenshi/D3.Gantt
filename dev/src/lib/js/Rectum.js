@@ -33,14 +33,14 @@ export default class Rectum extends Colon {
               .selectAll("rect.stage")
               .data([data.stage]);
 
-        // update
-        draw(selections);
-
         // add
         draw(selections
              .enter()
              .append("rect")
              .attr("class", 'stage'));
+
+        // update
+        draw(selections);
 
         // remove
         selections.exit().remove();
@@ -59,10 +59,15 @@ export default class Rectum extends Colon {
               .selectAll("rect.head")
               .data([data.head]);
 
-        draw(selections.enter().append("rect").attr("class", 'head'));
+        // add
+        draw(selections.enter()
+             .append("rect")
+             .attr("class", 'head'));
 
+        // update
         draw(selections);
 
+        // delete
         selections.exit().remove();
     }
     drawHeadGrit (place, data) {}
@@ -75,6 +80,7 @@ export default class Rectum extends Colon {
 
         const enterd = cells.enter().append("g").attr("class", 'cell');
 
+        // add
         enterd
             .append("text")
             .attr("class", 'chart')
@@ -84,8 +90,10 @@ export default class Rectum extends Colon {
             .attr("font-size", d=> 55)
             .text(d=> d.core.start.format('MM月'));
 
+        // remove
         cells.exit().remove();
 
+        // update
         cells
             .selectAll("text.chart")
             .data(data.timescale, (d)=>d.core.start.format('YYYY-MM-DD'))
@@ -102,6 +110,7 @@ export default class Rectum extends Colon {
 
         const enterd = selection.enter().append("rect");
 
+        // add
         enterd
             .attr("class", 'body')
             .attr("x", d=> d.location().x)
@@ -110,6 +119,7 @@ export default class Rectum extends Colon {
             .attr("height", d=> d.size().h)
             .attr("fill", d=> d.style.background);
 
+        // update
         selection
             .data([data.body])
             .attr("x", d=> d.location().x)
@@ -117,6 +127,8 @@ export default class Rectum extends Colon {
             .attr("width", d=> d.size().w)
             .attr("height", d=> d.size().h)
             .attr("fill", d=> d.style.background);
+
+        // remove
     }
     drawBodyGrid (place, data) {
         const draw = (grids)=> {
@@ -145,6 +157,7 @@ export default class Rectum extends Colon {
         grids.exit().remove();
     }
     drawFoot (place, data) {
+        // add
         place.selectAll("rect.foot")
             .data([data.foot])
             .enter()
@@ -163,6 +176,7 @@ export default class Rectum extends Colon {
 
         const enterd = selection.enter().append("rect").attr("class", 'row');
 
+        // add
         enterd
             .attr("x", d=> d.location().x)
             .attr("y", d=> d.location().y)
@@ -170,12 +184,15 @@ export default class Rectum extends Colon {
             .attr("height", d=> d.size().h)
             .attr("fill", d=> d.style.background);
 
+        // update
         selection
             .attr("x", d=> d.location().x)
             .attr("y", d=> d.location().y)
             .attr("width", d=> d.size().w)
             .attr("height", d=> d.size().h)
             .attr("fill", d=> d.style.background);
+
+        // remove
     }
     drawNow (place, data) {
         const selection = place
@@ -184,6 +201,7 @@ export default class Rectum extends Colon {
 
         const enterd = selection.enter().append("line").attr("class", 'grid');
 
+        // add 
         enterd
             .attr("x1", d=> d.x1)
             .attr("y1", d=> d.y1)
@@ -192,6 +210,7 @@ export default class Rectum extends Colon {
             .attr("stroke", "#d9333f")
             .attr("stroke-width", 5);
 
+        // update
         selection
             .attr("x1", d=> d.x1)
             .attr("y1", d=> d.y1)
@@ -199,6 +218,8 @@ export default class Rectum extends Colon {
             .attr("y2", d=> d.y2)
             .attr("stroke", "#d9333f")
             .attr("stroke-width", 5);
+
+        // remove
     }
     drawCharts (place, data) {
         new Painter.Wbs().draw(place, data);
@@ -226,9 +247,11 @@ export default class Rectum extends Colon {
         this.drawNow(place, data);
     }
     styling (data) {
-        this.stylist.stylingNew(data);
+        // テスト中。
+        return this.stylist.stylingNew(data);
 
-        return this.stylist.styling(data);
+        // これを置き換える。
+        // return this.stylist.styling(data);
     }
     /* ******** */
     /*  Data    */
