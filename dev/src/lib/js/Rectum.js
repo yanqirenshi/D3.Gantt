@@ -1,6 +1,7 @@
 import {Colon} from '@yanqirenshi/assh0le';
 
 import Stylist from './Stylist.js';
+import Builder from './Builder.js';
 
 import * as Painter from './painter/index.js';
 
@@ -229,6 +230,10 @@ export default class Rectum extends Colon {
     data (data) {
         if (arguments.length===0)
             return super.data();
+
+        const builder = new Builder();
+
+        // builder.build(data.wbs, data.workpackages, data.style);
 
         return super.data(this.styling(data));
     }

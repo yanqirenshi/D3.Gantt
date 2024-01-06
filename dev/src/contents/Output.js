@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import D3Gantt, {Rectum} from '../lib/index.js';
 import OutputController from './Output/OutputController.js';
 import Graph from './Output/Graph.js';
-
-const rectum = new Rectum({
-    transform:  {
-        k: 0.3,
-        x: 0.0,
-        y: 0.0,
-    },
-});
 
 export default function Output (props) {
     const source = props.source;
