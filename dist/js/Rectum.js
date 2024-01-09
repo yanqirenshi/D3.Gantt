@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _assh0le = require("@yanqirenshi/assh0le");
 var _Stylist = _interopRequireDefault(require("./Stylist.js"));
+var _Builder = _interopRequireDefault(require("./Builder.js"));
 var Painter = _interopRequireWildcard(require("./painter/index.js"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -16,6 +17,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _get() { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get.bind(); } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(arguments.length < 3 ? target : receiver); } return desc.value; }; } return _get.apply(this, arguments); }
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
@@ -29,7 +32,19 @@ var Rectum = /*#__PURE__*/function (_Colon) {
   function Rectum(params) {
     var _this;
     _classCallCheck(this, Rectum);
-    _this = _super.call(this, params);
+    _this = _super.call(this, {
+      layers: [{
+        id: 1,
+        code: 'background'
+      }, {
+        id: 2,
+        code: 'foreground'
+      }, {
+        id: 3,
+        code: 'canvas'
+      }],
+      transform: params.transform
+    });
     _this.stylist = new _Stylist["default"]();
     return _this;
   }
@@ -37,7 +52,7 @@ var Rectum = /*#__PURE__*/function (_Colon) {
     key: "drawStage",
     value: function drawStage(place, data) {
       var draw = function draw(selections) {
-        selections.attr("class", 'stage').attr("x", function (d) {
+        selections.attr("x", function (d) {
           return d.location().x;
         }).attr("y", function (d) {
           return d.location().y;
@@ -51,14 +66,14 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       };
       var selections = place.selectAll("rect.stage").data([data.stage]);
       draw(selections);
-      draw(selections.enter().append("rect"));
+      draw(selections.enter().append("rect").attr("class", 'stage'));
       selections.exit().remove();
     }
   }, {
     key: "drawHead",
     value: function drawHead(place, data) {
       var draw = function draw(selection) {
-        selection.attr("class", 'head').attr("x", function (d) {
+        selection.attr("x", function (d) {
           return d.location().x;
         }).attr("y", function (d) {
           return d.location().y;
@@ -71,7 +86,7 @@ var Rectum = /*#__PURE__*/function (_Colon) {
         });
       };
       var selections = place.selectAll("rect.head").data([data.head]);
-      draw(selections.enter().append("rect"));
+      draw(selections.enter().append("rect").attr("class", 'head'));
       draw(selections);
       selections.exit().remove();
     }
@@ -237,10 +252,16 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       }).attr("stroke", "#d9333f").attr("stroke-width", 5);
     }
   }, {
+    key: "drawCharts",
+    value: function drawCharts(place, data) {
+      new Painter.Wbs().draw(place, data);
+      new Painter.Workpackages().draw(place, data);
+    }
+  }, {
     key: "draw",
     value: function draw() {
       var data = this.data();
-      var place = this.layer('foreground');
+      var place = this.layer('canvas');
       this.drawStage(place, data);
       this.drawHead(place, data);
       this.drawBody(place, data);
@@ -249,16 +270,26 @@ var Rectum = /*#__PURE__*/function (_Colon) {
       this.drawRows(place, data);
       this.drawBodyGrid(place, data);
       this.drawHeadGrit(place, data);
-
-      // chart を描画する。
-      new Painter.Wbs().draw(place, data);
-      new Painter.Workpackages().draw(place, data);
+      this.drawCharts(place, data);
       this.drawNow(place, data);
     }
   }, {
     key: "styling",
     value: function styling(data) {
       return this.stylist.styling(data);
+    }
+    /* ******** */
+    /*  Data    */
+    /* ******** */
+  }, {
+    key: "data",
+    value: function data(_data) {
+      if (arguments.length === 0) return _get(_getPrototypeOf(Rectum.prototype), "data", this).call(this);
+      var builder = new _Builder["default"]();
+
+      // builder.build(data.wbs, data.workpackages, data.style);
+
+      return _get(_getPrototypeOf(Rectum.prototype), "data", this).call(this, this.styling(_data));
     }
   }]);
   return Rectum;

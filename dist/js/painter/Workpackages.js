@@ -36,10 +36,7 @@ var Workpackages = /*#__PURE__*/function () {
         return d._label.location.x;
       }).attr("y", function (d) {
         return d._label.location.y;
-      })
-      // .attr("x", d=> d.location().x + (d.style.padding * 3))
-      // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
-      .attr("font-family", "Verdana").attr("font-size", function (d) {
+      }).attr("font-family", "Verdana").attr("font-size", function (d) {
         return fontSize(d);
       }).text(function (d) {
         var s = (0, _moment["default"])(d.plan().start).format('MM-DD');
@@ -122,7 +119,9 @@ var Workpackages = /*#__PURE__*/function () {
         return wp.id;
       });
 
-      // add
+      /* ****************************************************************
+       *  Add
+       * **************************************************************** */
       var enterd = selection.enter().append("g").attr("class", 'chart');
       var isText = function isText(d) {
         return d.url() ? false : true;
@@ -143,7 +142,9 @@ var Workpackages = /*#__PURE__*/function () {
       this.drawTexts(enterd.filter(isText).append("text").attr("class", 'chart'));
       this.drawTextsWithLink('enter', enterd.filter(isTextWithLink).append("a"));
 
-      // update
+      /* ****************************************************************
+       *  Update
+       * **************************************************************** */
       var workpackages = data.workpackages.list;
       this.drawResult(selection.filter(function (d) {
         return d._result.size.w > 0;
@@ -155,7 +156,9 @@ var Workpackages = /*#__PURE__*/function () {
       this.drawTexts(selection.filter(isText).selectAll("text.chart").data(workpackages, eqWp));
       this.drawTextsWithLink('update', selection.filter(isTextWithLink).selectAll("a").data(workpackages, eqWp));
 
-      // delete
+      /* ****************************************************************
+       *  Delete
+       * **************************************************************** */
       selection.exit().remove();
     }
   }]);

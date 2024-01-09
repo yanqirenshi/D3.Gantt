@@ -27,10 +27,7 @@ var Wbs = /*#__PURE__*/function () {
         return d.size().w;
       }).attr("height", function (d) {
         return d.size().h;
-      })
-      // .attr("rx", d=> d.size.h/2)
-      // .attr("ry", d=> d.size.h/2)
-      .attr("stroke-width", 0.5).attr("stroke", "#888").attr("fill", 'rgba(255,255,255,0.1');
+      }).attr("stroke-width", 0.5).attr("stroke", "#888").attr("fill", 'rgba(255,255,255,0.1');
     }
   }, {
     key: "drawTitle",
@@ -39,10 +36,7 @@ var Wbs = /*#__PURE__*/function () {
         return d.location().x + 44;
       }).attr("y", function (d) {
         return d.location().y + 111;
-      })
-      // .attr("x", d=> d.location().x + (d.style.padding * 3))
-      // .attr("y", d=> d.location().y + d.style.padding + (d.size().h/2) + d.style.padding)
-      .attr("font-family", "Verdana").attr("font-size", function (d) {
+      }).attr("font-family", "Verdana").attr("font-size", function (d) {
         return 88;
       }).attr("font-weight", function (d) {
         return 'bold';
@@ -54,14 +48,15 @@ var Wbs = /*#__PURE__*/function () {
     key: "drawAdd",
     value: function drawAdd(selection) {
       var enterd = selection.enter().append("g").attr("class", 'chart_wbs');
-      this.drawBody(enterd.append("rect").attr("class", 'chart_wbs'));
-      this.drawTitle(enterd.append("text").attr("class", 'chart_wbs'));
+      this.drawBody(enterd.append("rect"));
+      this.drawTitle(enterd.append("text"));
     }
   }, {
     key: "drawUpdate",
     value: function drawUpdate(selection) {
       this.drawBody(selection);
-      selection.selectAll("text.chart_wbs");
+      this.drawBody(selection.selectAll("rect.chart_wbs"));
+      this.drawTitle(selection.selectAll("text.chart_wbs"));
     }
   }, {
     key: "drawRemove",

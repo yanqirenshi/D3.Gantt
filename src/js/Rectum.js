@@ -1,19 +1,26 @@
 import {Colon} from '@yanqirenshi/assh0le';
 
 import Stylist from './Stylist.js';
+import Builder from './Builder.js';
 
 import * as Painter from './painter/index.js';
 
 export default class Rectum extends Colon {
     constructor (params) {
-        super(params);
+        super({
+            layers: [
+                { id: 1, code: 'background' },
+                { id: 2, code: 'foreground' },
+                { id: 3, code: 'canvas' },
+            ],
+            transform: params.transform,
+        });
 
         this.stylist = new Stylist();
     }
     drawStage (place, data) {
         const draw = (selections)=> {
             selections
-                .attr("class", 'stage')
                 .attr("x", d=> d.location().x)
                 .attr("y", d=> d.location().y)
                 .attr("width", d=> d.size().w)
@@ -27,26 +34,28 @@ export default class Rectum extends Colon {
 
         draw(selections);
 
-        draw(selections.enter().append("rect"));
+        draw(selections
+             .enter()
+             .append("rect")
+             .attr("class", 'stage'));
 
         selections.exit().remove();
     }
     drawHead (place, data) {
         const draw = (selection)=> {
             selection
-                .attr("class", 'head')
-            .attr("x", d=> d.location().x)
-            .attr("y", d=> d.location().y)
-            .attr("width", d=> d.size().w)
-            .attr("height", d=> d.size().h)
-            .attr("fill", d=> d.style.background);
+                .attr("x", d=> d.location().x)
+                .attr("y", d=> d.location().y)
+                .attr("width", d=> d.size().w)
+                .attr("height", d=> d.size().h)
+                .attr("fill", d=> d.style.background);
         };
 
         const selections = place
               .selectAll("rect.head")
               .data([data.head]);
 
-        draw(selections.enter().append("rect"));
+        draw(selections.enter().append("rect").attr("class", 'head'));
 
         draw(selections);
 
@@ -187,10 +196,14 @@ export default class Rectum extends Colon {
             .attr("stroke", "#d9333f")
             .attr("stroke-width", 5);
     }
+    drawCharts (place, data) {
+        new Painter.Wbs().draw(place, data);
+        new Painter.Workpackages().draw(place, data);
+    }
     draw () {
         const data = this.data();
 
-        const place = this.layer('foreground');
+        const place = this.layer('canvas');
 
         this.drawStage(place, data);
 
@@ -204,13 +217,24 @@ export default class Rectum extends Colon {
         this.drawBodyGrid(place, data);
         this.drawHeadGrit(place, data);
 
-        // chart を描画する。
-        new Painter.Wbs().draw(place, data);
-        new Painter.Workpackages().draw(place, data);
+        this.drawCharts(place, data);
 
         this.drawNow(place, data);
     }
     styling (data) {
         return this.stylist.styling(data);
+    }
+    /* ******** */
+    /*  Data    */
+    /* ******** */
+    data (data) {
+        if (arguments.length===0)
+            return super.data();
+
+        const builder = new Builder();
+
+        // builder.build(data.wbs, data.workpackages, data.style);
+
+        return super.data(this.styling(data));
     }
 }
