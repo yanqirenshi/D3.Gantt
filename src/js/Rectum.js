@@ -32,13 +32,16 @@ export default class Rectum extends Colon {
               .selectAll("rect.stage")
               .data([data.stage]);
 
+        // update
         draw(selections);
 
+        // add
         draw(selections
              .enter()
              .append("rect")
              .attr("class", 'stage'));
 
+        // delete
         selections.exit().remove();
     }
     drawHead (place, data) {
@@ -55,10 +58,13 @@ export default class Rectum extends Colon {
               .selectAll("rect.head")
               .data([data.head]);
 
+        // add
         draw(selections.enter().append("rect").attr("class", 'head'));
 
+        // update
         draw(selections);
 
+        // delete
         selections.exit().remove();
     }
     drawHeadGrit (place, data) {}
@@ -67,57 +73,56 @@ export default class Rectum extends Colon {
               .selectAll("g.cell")
               .data(data.timescale, (d)=>d.core.start.format('YYYY-MM-DD'));
 
-        cells.exit().remove();
+        const draw = (selection)=> {
+            selection
+            .attr("x", d=> d.location().x + 22)
+            .attr("y", d=> d.location().y + (77))
+            .attr("font-family", "Verdana")
+            .attr("font-size", d=> 55)
+            .text(d=> d.core.start.format('yyyy-MM'));
+        };
 
         const enterd = cells.enter().append("g").attr("class", 'cell');
 
-        enterd
-            .append("text")
-            .attr("class", 'chart')
-            .attr("x", d=> d.location().x + 22)
-            .attr("y", d=> d.location().y + (77))
-            .attr("font-family", "Verdana")
-            .attr("font-size", d=> 55)
-            .text(d=> d.core.start.format('MM月'));
+        // add
+        draw(enterd
+             .append("text")
+             .attr("class", 'chart'));
 
+        // update
+        draw(cells
+             .selectAll("text.chart")
+             .data(data.timescale, (d)=>d.core.start.format('YYYY-MM-DD')));
+
+        // delete
         cells.exit().remove();
-
-        cells
-            .selectAll("text.chart")
-            .data(data.timescale, (d)=>d.core.start.format('YYYY-MM-DD'))
-            .attr("x", d=> d.location().x + 22)
-            .attr("y", d=> d.location().y + (77))
-            .attr("font-family", "Verdana")
-            .attr("font-size", d=> 55)
-            .text(d=> d.core.start.format('MM月'));
     }
     drawBody (place, data) {
+        const draw = (selection)=> {
+            selection
+                .attr("x", d=> d.location().x)
+                .attr("y", d=> d.location().y)
+                .attr("width", d=> d.size().w)
+                .attr("height", d=> d.size().h)
+                .attr("fill", d=> d.style.background);
+        };
+
         const selection = place
               .selectAll("rect.body")
               .datum([data.body]);
 
-        const enterd = selection.enter().append("rect");
+        // add
+        draw(selection.enter().append("rect").attr("class", 'body'));
 
-        enterd
-            .attr("class", 'body')
-            .attr("x", d=> d.location().x)
-            .attr("y", d=> d.location().y)
-            .attr("width", d=> d.size().w)
-            .attr("height", d=> d.size().h)
-            .attr("fill", d=> d.style.background);
+        // update
+        draw(selection.data([data.body]));
 
-        selection
-            .data([data.body])
-            .attr("x", d=> d.location().x)
-            .attr("y", d=> d.location().y)
-            .attr("width", d=> d.size().w)
-            .attr("height", d=> d.size().h)
-            .attr("fill", d=> d.style.background);
+        // delete
+        selection.exit().remove();
     }
     drawBodyGrid (place, data) {
-        const draw = (grids)=> {
-            grids
-                .attr("class", 'grid')
+        const draw = (selection)=> {
+            selection
                 .attr("x1", d=> d.location.x)
                 .attr("y1", d=> d.location.y)
                 .attr("x2", d=> d.location.x)
@@ -132,7 +137,7 @@ export default class Rectum extends Colon {
               .data(data.grid);
 
         // add
-        draw(grids.enter().append("line"));
+        draw(grids.enter().append("line").attr("class", 'grid'));
 
         // update
         draw(grids);
@@ -153,52 +158,52 @@ export default class Rectum extends Colon {
             .attr("fill", d=> d.style.background);
     }
     drawRows (place, data) {
+        const draw = (selection)=> {
+            selection
+                .attr("x", d=> d.location().x)
+                .attr("y", d=> d.location().y)
+                .attr("width", d=> d.size().w)
+                .attr("height", d=> d.size().h)
+                .attr("fill", d=> d.style.background);
+        };
+
         const selection = place
               .selectAll("rect.row")
               .data(data.wbs.list, (wbs)=> wbs.id);
 
-        const enterd = selection.enter().append("rect").attr("class", 'row');
+        // add
+        draw(selection.enter().append("rect").attr("class", 'row'));
 
-        enterd
-            .attr("x", d=> d.location().x)
-            .attr("y", d=> d.location().y)
-            .attr("width", d=> d.size().w)
-            .attr("height", d=> d.size().h)
-            .attr("fill", d=> d.style.background);
+        // update
+        draw(selection);
 
-        selection
-            .attr("x", d=> d.location().x)
-            .attr("y", d=> d.location().y)
-            .attr("width", d=> d.size().w)
-            .attr("height", d=> d.size().h)
-            .attr("fill", d=> d.style.background);
+        // delete
+        selection.exit().remove();
     }
     drawNow (place, data) {
+        const draw = (selection)=> {
+            selection
+                .attr("x1", d=> d.x1)
+                .attr("y1", d=> d.y1)
+                .attr("x2", d=> d.x2)
+                .attr("y2", d=> d.y2)
+                .attr("stroke", "#d9333f")
+                .attr("stroke-width", 6);
+        };
+
         const selection = place
               .selectAll("line.now")
-              .data([data.now]);
+              .data([data.now],
+                   d=> d.x1);
 
-        const enterd = selection.enter().append("line").attr("class", 'grid');
+        // add
+        draw(selection.enter().append("line").attr("class", 'grid'));
 
-        enterd
-            .attr("x1", d=> d.x1)
-            .attr("y1", d=> d.y1)
-            .attr("x2", d=> d.x2)
-            .attr("y2", d=> d.y2)
-            .attr("stroke", "#d9333f")
-            .attr("stroke-width", 5);
+        // update
+        draw(selection);
 
-        selection
-            .attr("x1", d=> d.x1)
-            .attr("y1", d=> d.y1)
-            .attr("x2", d=> d.x2)
-            .attr("y2", d=> d.y2)
-            .attr("stroke", "#d9333f")
-            .attr("stroke-width", 5);
-    }
-    drawCharts (place, data) {
-        new Painter.Wbs().draw(place, data);
-        new Painter.Workpackages().draw(place, data);
+        // delete
+        selection.exit().remove();
     }
     draw () {
         const data = this.data();
@@ -208,16 +213,17 @@ export default class Rectum extends Colon {
         this.drawStage(place, data);
 
         this.drawHead(place, data);
-        this.drawBody(place, data);
-        this.drawFoot(place, data);
-
-        this.drawCell(place, data);
-        this.drawRows(place, data);
+        // this.drawBody(place, data);
+        // this.drawFoot(place, data);
 
         this.drawBodyGrid(place, data);
         this.drawHeadGrit(place, data);
 
-        this.drawCharts(place, data);
+        this.drawCell(place, data);
+        this.drawRows(place, data);
+
+        new Painter.Wbs().draw(place, data);
+        new Painter.Workpackages().draw(place, data);
 
         this.drawNow(place, data);
     }

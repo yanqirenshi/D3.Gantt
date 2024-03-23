@@ -15,10 +15,20 @@ export default class Workpackages {
 
     }
     drawTexts (texts) {
-        const fontSize = (d) => {
+        const fontSize = (d)=> {
             const h = d._label.size.h;
 
             return Math.floor((h - (d.style.padding * 2)) * 0.7);
+        };
+
+        const text = (d)=> {
+            const s = moment(d.plan().start).format('MM-DD');
+            const e = moment(d.plan().end).format('MM-DD');
+
+            const term = `${s} 〜 ${e}`;
+            const progress = d.core.progress || 0;
+
+            return `${d.core.name},　${term},　${progress}%,　${d.core.id}`;
         };
 
         return texts
@@ -26,12 +36,7 @@ export default class Workpackages {
             .attr("y", d=> d._label.location.y)
             .attr("font-family", "Verdana")
             .attr("font-size", d=> fontSize(d))
-            .text(d=> {
-                const s = moment(d.plan().start).format('MM-DD');
-                const e = moment(d.plan().end).format('MM-DD');
-
-                return `${d.core.name},　${s} 〜 ${e},　${d.core.progress}%,　${d.core.id}`;
-            });
+            .text(d=> text(d));
     }
     fillColor (d, type) {
         const core_style = d.core.style;
@@ -46,40 +51,40 @@ export default class Workpackages {
     }
     drawPlan (rects) {
         rects
-            .attr("x", d=> d._plan.location.x)
-            .attr("y", d=> d._plan.location.y)
-            .attr("width", d=>  d._plan.size.w)
+            .attr("x",      d=> d._plan.location.x)
+            .attr("y",      d=> d._plan.location.y)
+            .attr("width",  d=> d._plan.size.w)
             .attr("height", d=> d._plan.size.h)
-            .attr("rx", d=> d._plan.size.h/2)
-            .attr("ry", d=> d._plan.size.h/2)
-            .attr("fill", d=> this.fillColor(d, 'plan'));
+            .attr("rx",     d=> d._plan.size.h/2)
+            .attr("ry",     d=> d._plan.size.h/2)
+            .attr("fill",   d=> this.fillColor(d, 'plan'));
     }
     drawResult (rects) {
         rects
-            .attr("x", d=> d._result.location.x)
-            .attr("y", d=> d._result.location.y)
-            .attr("width", d=>  d._result.size.w)
+            .attr("x",      d=> d._result.location.x)
+            .attr("y",      d=> d._result.location.y)
+            .attr("width",  d=> d._result.size.w)
             .attr("height", d=> d._result.size.h)
-            .attr("rx", d=> d._result.size.h/2)
-            .attr("ry", d=> d._result.size.h/2)
-            .attr("fill", d=> this.fillColor(d, 'result'));
+            .attr("rx",     d=> d._result.size.h/2)
+            .attr("ry",     d=> d._result.size.h/2)
+            .attr("fill",   d=> this.fillColor(d, 'result'));
     }
     drawProgress (rects) {
         rects
-            .attr("x", d=> {
-                return d._progress.location.x;
-            })
-            .attr("y", d=> d._progress.location.y)
-            .attr("width", d=>  d._progress.size.w)
+            .attr("x",      d=> d._progress.location.x)
+            .attr("y",      d=> d._progress.location.y)
+            .attr("width",  d=> d._progress.size.w)
             .attr("height", d=> d._progress.size.h)
-            .attr("rx", d=> d._progress.size.h/2)
-            .attr("ry", d=> d._progress.size.h/2)
-            .attr("fill", d=> this.fillColor(d, 'progress'));
+            .attr("rx",     d=> d._progress.size.h/2)
+            .attr("ry",     d=> d._progress.size.h/2)
+            .attr("fill",   d=> this.fillColor(d, 'progress'));
     }
     draw (place, data) {
         const selection = place
               .selectAll("g.chart")
-              .data(data.workpackages.list, (wp)=> wp.id);
+              .data(
+                  data.workpackages.list,
+                  (wp)=> wp.id);
 
         /* ****************************************************************
          *  Add

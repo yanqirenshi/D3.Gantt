@@ -199,19 +199,24 @@ export default class Stylist {
 
         obj.location({ x: 0, y: 0 });
     }
-    getTerm (pools) {
+    getTerm (data) {
         const out = {
             start: null,
             end: null,
         };
 
-        for (const wp of pools.workpackages) {
+        for (const wp of data.workpackages) {
             if (out.start===null || out.start > wp.plan.start)
                 out.start = wp.plan.start;
 
             if (out.end===null || out.end < wp.plan.end)
                 out.end = wp.plan.end;
         }
+
+        const cycle = data.scale.cycle;
+
+        out.start = moment(out.start).add(-3, cycle).toDate();
+        out.end   = moment(out.end).add(3, cycle).toDate();
 
         return out;
     }

@@ -223,7 +223,7 @@ const DATA = {
         body: {
             row: {
                 padding: 33,
-                background: '#fff',
+                background: 'rgba(255,255,255,0.5)',
             },
             chart: {
                 h: 111,

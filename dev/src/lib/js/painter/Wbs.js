@@ -9,8 +9,7 @@ export default class Wbs {
             .attr("height", d=> d.size().h)
             .attr("stroke-width", 0.5)
             .attr("stroke","#888")
-            .attr("fill", 'rgba(255,255,255,0.1')
-        ;
+            .attr("fill", 'rgba(255,255,255,0.1');
     }
     drawTitle (texts) {
         return texts
