@@ -18,6 +18,7 @@ export default class Wbs {
             .attr("font-family", "Verdana")
             .attr("font-size", d=> 88)
             .attr("font-weight", d=> 'bold')
+            .attr("fill", "#333")
             .text(d=> d.name());
     }
     drawAdd (selection) {
@@ -27,7 +28,7 @@ export default class Wbs {
               .attr("class", 'chart_wbs');
 
         this.drawBody(enterd.append("rect"));
-        this.drawTitle(enterd.append("text"));
+        this.drawTitle(enterd.append("text").attr("class", 'chart_wbs'));
     }
     drawUpdate (selection) {
         this.drawBody(selection);

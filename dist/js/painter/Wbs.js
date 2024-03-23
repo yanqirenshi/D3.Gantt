@@ -40,7 +40,7 @@ var Wbs = /*#__PURE__*/function () {
         return 88;
       }).attr("font-weight", function (d) {
         return 'bold';
-      }).text(function (d) {
+      }).attr("fill", "#333").text(function (d) {
         return d.name();
       });
     }
@@ -49,7 +49,7 @@ var Wbs = /*#__PURE__*/function () {
     value: function drawAdd(selection) {
       var enterd = selection.enter().append("g").attr("class", 'chart_wbs');
       this.drawBody(enterd.append("rect"));
-      this.drawTitle(enterd.append("text"));
+      this.drawTitle(enterd.append("text").attr("class", 'chart_wbs'));
     }
   }, {
     key: "drawUpdate",
