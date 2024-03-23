@@ -32,6 +32,13 @@ var Workpackages = /*#__PURE__*/function () {
         var h = d._label.size.h;
         return Math.floor((h - d.style.padding * 2) * 0.7);
       };
+      var text = function text(d) {
+        var s = (0, _moment["default"])(d.plan().start).format('MM-DD');
+        var e = (0, _moment["default"])(d.plan().end).format('MM-DD');
+        var term = "".concat(s, " \u301C ").concat(e);
+        var progress = d.core.progress || 0;
+        return "".concat(d.core.name, ",\u3000").concat(term, ",\u3000").concat(progress, "%,\u3000").concat(d.core.id);
+      };
       return texts.attr("x", function (d) {
         return d._label.location.x;
       }).attr("y", function (d) {
@@ -39,9 +46,7 @@ var Workpackages = /*#__PURE__*/function () {
       }).attr("font-family", "Verdana").attr("font-size", function (d) {
         return fontSize(d);
       }).text(function (d) {
-        var s = (0, _moment["default"])(d.plan().start).format('MM-DD');
-        var e = (0, _moment["default"])(d.plan().end).format('MM-DD');
-        return "".concat(d.core.name, ",\u3000").concat(s, " \u301C ").concat(e, ",\u3000").concat(d.core.progress, "%,\u3000").concat(d.core.id);
+        return text(d);
       });
     }
   }, {

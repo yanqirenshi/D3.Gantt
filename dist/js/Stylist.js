@@ -259,12 +259,12 @@ var Stylist = /*#__PURE__*/function () {
     }
   }, {
     key: "getTerm",
-    value: function getTerm(pools) {
+    value: function getTerm(data) {
       var out = {
         start: null,
         end: null
       };
-      var _iterator6 = _createForOfIteratorHelper(pools.workpackages),
+      var _iterator6 = _createForOfIteratorHelper(data.workpackages),
         _step6;
       try {
         for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
@@ -277,6 +277,9 @@ var Stylist = /*#__PURE__*/function () {
       } finally {
         _iterator6.f();
       }
+      var cycle = data.scale.cycle;
+      out.start = (0, _moment["default"])(out.start).add(-3, cycle).toDate();
+      out.end = (0, _moment["default"])(out.end).add(3, cycle).toDate();
       return out;
     }
   }, {
